@@ -98,7 +98,7 @@ def toJson(pob):
         'Sanos' : sanos,
         'Recuperados' : recuperados,
         'Muertos' : muertos,
-        'Clasificaion' : (contagiados+muertos) / (contagiados+muertos+sanos+recuperados),
+        'Clasificasion' : (contagiados+muertos) / (contagiados+muertos+sanos+recuperados),
         'Poblacion' : pob
     }
     resDias.append(obj)

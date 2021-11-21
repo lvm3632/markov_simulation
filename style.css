@@ -17,9 +17,10 @@ body {
     display:flex;
 }
 .sidebar {
-    height: 100vh;
+    height: 100%;
     width: 20em;
     background-color: grey;
+    max-width:100%;
 }
 .box{
     display:grid;
@@ -27,7 +28,6 @@ body {
     place-items:center;
     width:70vw;
     height:90vh;
-    
     margin-left:4vw;
     margin-top:5vh;
 }

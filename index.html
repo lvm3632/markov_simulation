@@ -6,30 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos - COVID</title>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script>
+        let dia = -1;
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./index.js"></script>
+    <script>
+        
+    </script>
     <link rel="stylesheet" href="./style.css">
-
-    <!-- CSS MAP -->
-    <style>
-        #name {
-            position: absolute;
-            top: 30px;
-            left: 20px;
-            font-family: arial;
-            font-size: 3em;
-        }
-
-        .state {
-            fill: #c0c0c0;
-            stroke: white;
-            stroke-width: 1px;
-        }
-
-        .state:hover {
-            fill: #333;
-        }
-    </style>
 </head>
 
 <body>
@@ -39,12 +24,13 @@
             <div class="datos" style="text-align: left; margin-left:1.5em;">
                 <h1>COVID - Simulación</h1>
                 <h3>Datos:</h3>
-                <p>Contagiados: 250</p>
-                <p>Sanos: 150</p>
-                <p>Recuperados: 350</p>
-                <p>Muertos: 450</p>
-                <button>Día siguiente</button>
-                <button>Volver a iniciar</button>
+                <p>Día: <span id="dias">150</span></p>
+                <p>Contagiados: <span id="contagiados">150</span></p>
+                <p>Sanos: <span id="sanos">150</span></p>
+                <p>Recuperados: <span id="recuperados">150</span></p>
+                <p>Muertos: <span id="muertos">150</span></p>
+                <button id="nextDay" onclick="nextDay()">Día siguiente</button>
+                <button onclick="location.reload()">Volver a iniciar</button>
                 <p>Tipos de gráficas:</p>
                 <label for="cars">Gráficas</label>
 
@@ -54,43 +40,47 @@
                     <option value="puntos">Puntos</option>
                     <option value="mapa">Mapa</option>
                 </select>
+
+                <form>
+                    <p>Selecciona los datos a visualizar:</p>
+                    <input type="radio" checked id="html" name="fav_language" value="HTML">
+                    <label for="datos">Datos</label><br>
+                    <input type="radio" id="css" name="fav_language" value="CSS">
+                    <label for="poblacion">Población</label><br>
+                    <input type="radio" id="javascript" name="fav_language" value="JavaScript">
+                    <label for="clasificacion">Clasificación</label>
+                    <br />
+                    <input type="submit" value="Cambiar" style="margin-top:1em;">
+                </form>
+
+                <div>
+                    <h3>Población</h3>
+
+                    <h4>Contagiados: </h4>
+                    <p>Con cubrebocas y vacuna: 20</p>
+                    <p>Cin cubrebocas y vacuna: 10</p>
+                    <p>Con cubrebocas y no vacuna: 5</p>
+                    <p>Sin cubrebocas y no vacuna: 2</p>
+
+                    <h4>Sanos: </h4>
+                    <p>Con cubrebocas y vacuna: 20</p>
+                    <p>Sin cubrebocas y vacuna: 10</p>
+                    <p>Con cubrebocas y no vacuna: 5</p>
+                    <p>Sin cubrebocas y no vacuna: 2</p>
+                    
+                    <h4>Recuperados: </h4>
+                    <p>Con cubrebocas y vacuna: 20</p>
+                    <p>Sin cubrebocas y vacuna: 10</p>
+                    <p>Con cubrebocas y no vacuna: 5</p>
+                    <p>Sin cubrebocas y no vacuna: 2</p>
+
+                    <h4>Muerto(s): <span>5</span></h4>
+                </div>
             </div>
         </aside>
         <main class="box">
-            <div id="map">
-                <div id="name"></div>
-            </div>
         </main>
     </div>
-
-    <script>
-        var width = 900,
-            height = 480;
-
-        projection = d3.geo.albers()
-            .scale(1000)
-            .translate([width / 2, height / 2])
-            .precision(.1);
-
-        path = d3.geo.path()
-            .projection(projection);
-
-        svg = d3.select("#map").append("svg")
-            .attr("width", width)
-            .attr("height", height);
-
-        d3.json("data/us.json", function (error, state) {
-            svg.selectAll(".state")
-                .data(topojson.feature(state, state.objects.usStates).features)
-                .enter().append("path")
-                .attr("class", "state")
-                .attr("d", path)
-                .on('mouseover', function (d) {
-                    var abbreviation = d.properties.STATE_ABBR;
-                    return document.getElementById('name').innerHTML = abbreviation;
-                })
-        });
-    </script>
 </body>
 
 </html>
