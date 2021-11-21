@@ -1,6 +1,6 @@
 # Proyecto métodos cuantitativos
 
-## Simulación de contagios de COVID
+## Simulación de contagios de COVID.
 
 Kevin Contreras - A01635597
 
