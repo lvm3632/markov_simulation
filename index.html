@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos - COVID</title>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- CSS MAP -->
+    <style>
+        #name {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            font-family: arial;
+            font-size: 3em;
+        }
+
+        .state {
+            fill: #c0c0c0;
+            stroke: white;
+            stroke-width: 1px;
+        }
+
+        .state:hover {
+            fill: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+
+            <div class="datos" style="text-align: left; margin-left:1.5em;">
+                <h1>COVID - Simulación</h1>
+                <h3>Datos:</h3>
+                <p>Contagiados: 250</p>
+                <p>Sanos: 150</p>
+                <p>Recuperados: 350</p>
+                <p>Muertos: 450</p>
+                <button>Día siguiente</button>
+                <button>Volver a iniciar</button>
+                <p>Tipos de gráficas:</p>
+                <label for="cars">Gráficas</label>
+
+                <select name="cars" id="cars">
+                    <option value="linea">Linea</option>
+                    <option value="barra">Barra</option>
+                    <option value="puntos">Puntos</option>
+                    <option value="mapa">Mapa</option>
+                </select>
+            </div>
+        </aside>
+        <main class="box">
+            <div id="map">
+                <div id="name"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        var width = 900,
+            height = 480;
+
+        projection = d3.geo.albers()
+            .scale(1000)
+            .translate([width / 2, height / 2])
+            .precision(.1);
+
+        path = d3.geo.path()
+            .projection(projection);
+
+        svg = d3.select("#map").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        d3.json("data/us.json", function (error, state) {
+            svg.selectAll(".state")
+                .data(topojson.feature(state, state.objects.usStates).features)
+                .enter().append("path")
+                .attr("class", "state")
+                .attr("d", path)
+                .on('mouseover', function (d) {
+                    var abbreviation = d.properties.STATE_ABBR;
+                    return document.getElementById('name').innerHTML = abbreviation;
+                })
+        });
+    </script>
+</body>
+
+</html>

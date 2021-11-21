@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: content-box;
+}
+
+.container{
+    display:flex;
+}
+.sidebar {
+    height: 100vh;
+    width: 20em;
+    background-color: grey;
+}
+.box{
+    display:grid;
+    border:1px solid black;
+    place-items:center;
+    width:70vw;
+    height:90vh;
+    
+    margin-left:4vw;
+    margin-top:5vh;
+}
+
+
+.datos > p {
+    font-size: 1.24em;
+}
