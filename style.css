@@ -16,22 +16,24 @@ body {
 .container{
     display:flex;
 }
+
 .sidebar {
     height: 100%;
     width: 20em;
     background-color: grey;
     max-width:100%;
 }
+
 .box{
     display:grid;
     border:1px solid black;
     place-items:center;
     width:70vw;
-    height:90vh;
+    height:70vh;
     margin-left:4vw;
-    margin-top:5vh;
+    margin-top:11.5vh;
+    margin-right:4vw;
 }
-
 
 .datos > p {
     font-size: 1.24em;
