@@ -47,16 +47,16 @@
             <div class="datos" style="text-align: left; margin-left:1.5em;">
                 <h1>COVID - Simulación</h1>
 
-
+               
                 <fieldset style="margin-right:3.5em; padding-bottom:1.267em; margin-bottom:2em;">
                     <h3><label style="margin-left:3.867em;">Datos:</label></h3>
-                    <p>Día: <span id="dias">150</span></p>
-                    <progress id="progressDias" value="10" max="100" min="0"></progress>
-                    <p>Contagiados: <span id="contagiados">150</span></p>
-                    <p>Sanos: <span id="sanos">150</span></p>
-                    <p>Recuperados: <span id="recuperados">150</span></p>
-                    <p>Muertos: <span id="muertos">150</span></p>
-                    <p>Poblacion total: <span id="poblacionTotal">150</span></p>
+                    <p>Día: <span id="dias"></span></p>
+                    <progress id="progressDias" value="0" max="100" min="0"></progress>
+                    <p>Contagiados: <span id="contagiados"></span></p>
+                    <p>Sanos: <span id="sanos"></span></p>
+                    <p>Recuperados: <span id="recuperados"></span></p>
+                    <p>Muertos: <span id="muertos"></span></p>
+                    <p>Poblacion total: <span id="poblacionTotal"></span></p>
 
 
                 </fieldset>
@@ -65,7 +65,7 @@
                     <label style="margin-left:3.867em;">Controles</label>
                     <div style="margin-top:1em;">
                         <button id="previousDay" onclick="previousDay()">Día anterior</button>
-                        <button id="nextDay" onclick="nextDay()">Día siguiente</button>
+                        <button id="nextDay" value="toggle" onclick="nextDay()">Día siguiente</button>
                     </div>
                     <br />
                     <div>
@@ -133,12 +133,13 @@
                     </svg>
                 </template> -->
                 <h2 style="margin:0.5em 5em 0 0; padding:0;">Chart Points</h2>
+               
                 <svg style="border-bottom:1px solid black;" id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
                 </svg>
-                <p>🔴 Contagiado, 🔵 Recuperado, 🟢 Sano, ⚫ Muerto</p>
+                <p>🔴 Contagiado 🔵 Recuperado 🟢 Sano ⚫ Muerto</p>
             </main>
-            <main class="boxTable" id="boxTableId" style="margin-top:2.5em; display:none">
-                <h3>Población - Día <span id="diaPoblacion">0</span></h3>
+            <main class="boxTable" id="boxTableId" style="margin-top:2.5em;">
+                <h3>Población - Día <span id="diaPoblacion"></span></h3>
                 <table id="tableDays">
                     <tbody>
                         <thead>
@@ -152,35 +153,35 @@
                         </thead>
                         <tr>
                             <td class="states">Contagiados</td>
-                            <td id="contagiadoConVac">0.386</td>
-                            <td id="contagiadoConNoVac">0.147</td>
-                            <td id="contagiadoSinVac">0.202</td>
-                            <td id="contagiadoSinNoVac">0.062</td>
+                            <td id="contagiadoConVac">0</td>
+                            <td id="contagiadoConNoVac">0</td>
+                            <td id="contagiadoSinVac">0</td>
+                            <td id="contagiadoSinNoVac">0</td>
                         </tr>
                         <tr>
                             <td class="states">Sanos</td>
-                            <td id="sanoConVac">0.107</td>
-                            <td id="sanoConNoVac">0.267</td>
-                            <td id="sanoSinVac">0.227</td>
-                            <td id="sanoSinNoVac">0.120</td>
+                            <td id="sanoConVac">0</td>
+                            <td id="sanoConNoVac">0</td>
+                            <td id="sanoSinVac">0</td>
+                            <td id="sanoSinNoVac">0</td>
                         </tr>
                         <tr>
                             <td class="states">Recuperados</td>
-                            <td id="recuperadoConVac">0.035</td>
-                            <td id="recuperadoConNoVac">0.101</td>
-                            <td id="recuperadoSinVac">0.188</td>
-                            <td id="recuperadoSinNoVac">0.191</td>
+                            <td id="recuperadoConVac">0</td>
+                            <td id="recuperadoConNoVac">0</td>
+                            <td id="recuperadoSinVac">0</td>
+                            <td id="recuperadoSinNoVac">0</td>
                         </tr>
                         <tr>
                             <td class="states">Total</td>
-                            <td id="totalCon">42</td>
-                            <td id="totalSin">20</td>
-                            <td id="totalVac">31</td>
-                            <td id="totalNoVac">45</td>
+                            <td id="totalCon">0</td>
+                            <td id="totalSin">0</td>
+                            <td id="totalVac">0</td>
+                            <td id="totalNoVac">0</td>
                         </tr>
                     </tbody>
                 </table>
-                <p style="margin-top:1.2em;" id="muertosValor1">Muertos: <span id="muertosValor">300</span></p>
+                <p style="margin-top:1.2em;" id="muertosValor1">Muertos: <span id="muertosValor">0</span></p>
             </main>
         </div>
     </div>
