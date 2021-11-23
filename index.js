@@ -198,12 +198,15 @@ function previousDay() {
 }
 
 
+let firstCreate = true;
 
 function nextDay() {
 
-        if(contadorDias == 0){
+        if(firstCreate){
             this.inicializador();
             this.createHistogram(datos);
+            firstCreate = false;
+            return;
         }
         
     botonNextDay.addEventListener("click", (event) => {
