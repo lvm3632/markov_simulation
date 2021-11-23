@@ -6,10 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos - COVID</title>
-    <script>
-        let dia = -1;
-        let first = false;
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script defer src="./index.js"></script>
     <script>
@@ -41,42 +37,61 @@
 
             <div class="datos" style="text-align: left; margin-left:1.5em;">
                 <h1>COVID - Simulación</h1>
-                <h3>Datos:</h3>
-                <p>Día: <span id="dias">150</span></p>
-                <p>Contagiados: <span id="contagiados">150</span></p>
-                <p>Sanos: <span id="sanos">150</span></p>
-                <p>Recuperados: <span id="recuperados">150</span></p>
-                <p>Muertos: <span id="muertos">150</span></p>
-                <button id="nextDay" onclick="nextDay()">Día siguiente</button>
-                <button onclick="location.reload()">Volver a iniciar</button>
-                <br/>
-                <button style="margin-top:1em; margin-left:2.867em;" onclick="location.reload()">Ver animación</button>
 
-                <p>Tipos de gráficas:</p>
-                <label for="cars">Gráficas</label>
 
-                <select name="cars" id="cars">
-                    <option value="linea">Linea</option>
-                    <option value="barra">Barra</option>
-                    <option value="puntos">Puntos</option>
-                    <option value="mapa">Mapa</option>
-                </select>
+                <fieldset style="margin-right:3.5em; padding-bottom:1.267em; margin-bottom:2em;">
+                    <h3><label style="margin-left:3.867em;">Datos:</label></h3>
+                    <p>Día: <span id="dias">150</span></p>
+                    <progress id="progressDias" value="10" max="100" min="0"></progress>
+                    <p>Contagiados: <span id="contagiados">150</span></p>
+                    <p>Sanos: <span id="sanos">150</span></p>
+                    <p>Recuperados: <span id="recuperados">150</span></p>
+                    <p>Muertos: <span id="muertos">150</span></p>
 
-                <form>
-                    <p>Selecciona los datos a visualizar:</p>
-                    <input type="radio" checked id="html" name="fav_language" value="HTML">
-                    <label for="datos">Datos</label><br>
-                    <input type="radio" id="css" name="fav_language" value="CSS">
-                    <label for="poblacion">Población</label><br>
-                    <input type="radio" id="javascript" name="fav_language" value="JavaScript">
-                    <label for="clasificacion">Clasificación</label>
+                </fieldset>
+
+                <fieldset style="margin-right:3.5em; padding-bottom:1.267em;">
+                    <label style="margin-left:3.867em;">Controles</label>
+                    <div style="margin-top:1em;">
+                        <button id="previousDay" onclick="previousDay()">Día anterior</button>
+                        <button id="nextDay" onclick="nextDay()">Día siguiente</button>
+                    </div>
                     <br />
-                    <input type="submit" value="Cambiar" style="margin-top:1em;">
-                </form>
+                    <div>
+                        <button onclick="location.reload()">Volver a iniciar</button>
 
-                <div>
+                        <button onclick="location.reload()" value="animacion">Ver
+                            animación
+                        </button>
+                    </div>
+                </fieldset>
+
+                <fieldset style="margin-top:2em; margin-right:3.5em; padding-bottom:1.267em;">
+                    <p>Tipos de gráficas:</p>
+                    <label for="cars">Gráficas</label>
+
+                    <select name="graficas" id="graficas">
+                        <option value="puntos">Puntos</option>
+                        <option value="linea">Linea</option>
+                        <option value="barra">Barra</option>
+                        <option value="mapa">Mapa</option>
+                    </select>
+                    <form>
+                        <p>Selecciona los datos a visualizar:</p>
+                        <input type="radio" checked id="html" name="fav_language" value="HTML">
+                        <label for="datos">Datos</label><br>
+                        <input type="radio" id="css" name="fav_language" value="CSS">
+                        <label for="poblacion">Población</label><br>
+                        <input type="radio" id="javascript" name="fav_language" value="JavaScript">
+                        <label for="clasificacion">Clasificación</label>
+                        <br />
+                        <input type="submit" value="Cambiar" style="margin-top:1.667em; margin-left:5em;">
+                    </form>
+                </fieldset>
+
+
+                <!-- <div>
                     <h3>Población</h3>
-
                     <h4>Contagiados: </h4>
                     <p>Con cubrebocas y vacuna: 20</p>
                     <p>Cin cubrebocas y vacuna: 10</p>
@@ -94,23 +109,77 @@
                     <p>Sin cubrebocas y vacuna: 10</p>
                     <p>Con cubrebocas y no vacuna: 5</p>
                     <p>Sin cubrebocas y no vacuna: 2</p>
-
                     <h4>Muerto(s): <span>5</span></h4>
-                </div>
+                </div> -->
             </div>
         </aside>
-       
-        <main class="box">
-            <h2 style="margin:0.5em 5em 0 0; padding:0;">Chart Points</h2>
-             <svg id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
-             </svg>
-        </main>
-        <p id="demo"></p>
+
+        <div>
+            <main class="box" id="box">
+                <!-- <template id="chartPointsGraph">
+                    <h2 style="margin:0.5em 5em 0 0; padding:0;">Chart Points</h2>
+                    <svg id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
+                    </svg>
+                </template> -->
+                <h2 style="margin:0.5em 5em 0 0; padding:0;">Chart Points</h2>
+                <svg id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
+                </svg>
+            </main>
+            <main class="boxTable" id="boxTableId" style="margin-top:2.5em;">
+                <h3>Población - Día <span id="diaPoblacion">0</span></h3>
+
+                <table id="tableDays">
+                    <tbody>
+                        <thead>
+                            <tr>
+                                <th>Población</th>
+                                <th>Cubrebocas 😷</th>
+                                <th>Sin cubrebocas 😠</th>
+                                <th>Vacunado 💉</th>
+                                <th>Sin vacuna 🏥🚫</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td class="states">Contagiados</td>
+                            <td id="contagiadoConVac">0.386</td>
+                            <td id="contagiadoConNoVac">0.147</td>
+                            <td id="contagiadoSinVac">0.202</td>
+                            <td id="contagiadoSinNoVac">0.062</td>
+                        </tr>
+                        <tr>
+                            <td class="states">Sanos</td>
+                            <td id="sanoConVac">0.107</td>
+                            <td id="sanoConNoVac">0.267</td>
+                            <td id="sanoSinVac">0.227</td>
+                            <td id="sanoSinNoVac">0.120</td>
+                        </tr>
+                        <tr>
+                            <td class="states">Recuperados</td>
+                            <td id="recuperadoConVac">0.035</td>
+                            <td id="recuperadoConNoVac">0.101</td>
+                            <td id="recuperadoSinVac">0.188</td>
+                            <td id="recuperadoSinNoVac">0.191</td>
+                        </tr>
+                        <tr>
+                            <td class="states">Total</td>
+                            <td id="totalCon">42</td>
+                            <td id="totalSin">20</td>
+                            <td id="totalVac">31</td>
+                            <td id="totalNoVac">45</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top:1.2em;" id="muertosValor1">Muertos: <span id="muertosValor">300</span></p>
+            </main>
+        </div>
     </div>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="text/javascript" src="./d3.js"></script>
     <script>
-      
+        const template = document.getElementById('chartPointsGraph');
+        const content = template.content.cloneNode(false);
+        let box = document.getElementById("box");
+        box.append(content);
     </script>
 
     <script>

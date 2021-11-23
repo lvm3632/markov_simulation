@@ -1,61 +1,224 @@
-async function loadNames() {
-    const response = await fetch('test.json');
-    return await response.json();
-}
+let datos = [];
+let dia = -1;
+let first = false;
 
-let fullDays = false;
-$('#nextDay').click();
-
-function nextDay() {
-    let botonNextDay = document.getElementById("nextDay");
-    let diaSpanElement = document.getElementById("dias");
-    console.log("no entra")
-    botonNextDay.addEventListener("click", (event) => {
-
-        console.log(dia, "que valor tiene")
-        loadNames().then((datos) => {
-
-            if(!first){
-                createHistogram(datos[dia]["Contagiados"]);
-                first=true;
+function getJSON(url) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", url, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                var allText = rawFile.responseText;
+                //alert(allText);
+                datos = JSON.parse(allText);
             }
-            //console.log(datos[0]["Sanos"], "sanos");
-            let sanos = document.getElementById("sanos");
-            let contagiados = document.getElementById("contagiados");
-            let recuperados = document.getElementById("recuperados");
-            let muertos = document.getElementById("muertos");
-            console.log(datos.length, "longitud");
-            console.log(dia, "que valor tiene")
-            diaSpanElement.innerText = (dia);
-            if (dia < datos.length) {
-                console.log("entro IF??")
-                console.log(dia, "en length");
-                sanos.innerText = datos[dia]["Sanos"];
-                sanos.style.color = "blue";
-                contagiados.innerText = datos[dia]["Contagiados"];
-                contagiados.style.color = "red";
-                recuperados.innerText = datos[dia]["Recuperados"];
-                recuperados.style.color = "green";
-                muertos.innerText = datos[dia]["Muertos"];
-                muertos.style.color = "black";
-            } else {
-                fullDays = true;
-                diaSpanElement.innerText = (dia - 1);
-            }
-        });
-    });
-    dia++;
-    if (fullDays) {
-        botonNextDay.disabled = true;
-        console.log(dia, "DIAS en else");
-        alert("El día es mayor que la cantidad de días inicial: Día actual = " + dia);
-        return;
+        }
     }
-    console.log(dia, "DIA");
+    rawFile.send(null);
+}
+getJSON("test.json");
+
+// Datos
+console.log(datos, "datos");
+
+let contadorDias = -1;
+let diaSpanElement = document.getElementById("dias");
+let diaProgress = document.getElementById("progressDias");
+let sanos = document.getElementById("sanos");
+let contagiados = document.getElementById("contagiados");
+let recuperados = document.getElementById("recuperados");
+let muertos = document.getElementById("muertos");
+let previousDayButton = document.getElementById("previousDay");
+let botonNextDay = document.getElementById("nextDay");
+let diaPoblacion = document.getElementById("diaPoblacion");
+
+// Tabla parámetros: 
+let contagiadoConVac = document.getElementById("contagiadoConVac");
+let contagiadoConNoVac = document.getElementById("contagiadoConNoVac");
+let contagiadoSinVac = document.getElementById("contagiadoSinVac");
+let contagiadoSinNoVac = document.getElementById("contagiadoSinNoVac");
+
+let sanoConVac = document.getElementById("sanoConVac");
+let sanoConNoVac = document.getElementById("sanoConNoVac");
+let sanoSinVac = document.getElementById("sanoSinVac");
+let sanoSinNoVac = document.getElementById("sanoSinNoVac");
+
+let recuperadoConVac = document.getElementById("recuperadoConVac");
+let recuperadoConNoVac = document.getElementById("recuperadoConNoVac");
+let recuperadoSinVac = document.getElementById("recuperadoSinVac");
+let recuperadoSinNoVac = document.getElementById("recuperadoSinNoVac");
+
+let totalCon = document.getElementById("totalCon");
+let totalSin = document.getElementById("totalSin");
+let totalVac = document.getElementById("totalVac");
+let totalNoVac = document.getElementById("totalNoVac");
+
+let totalMuertos = document.getElementById("muertosValor");
+function inicializador() {
+
+    diaProgress.value = contadorDias + 1;
+    diaProgress.max = datos.length - 1;
+    diaSpanElement.innerText = 0;
+    sanos.innerText = datos[0]["Sanos"];
+    contagiados.innerText = datos[0]["Contagiados"];
+    recuperados.innerText = datos[0]["Recuperados"];
+    muertos.innerText = datos[0]["Muertos"];
+    previousDayButton.disabled = true;
+  
+    this.getSumaTable(0);
+
 }
 
-const createHistogram = (poblacion) => {
-    console.log(poblacion, "desde create histogram");
+function getSumaTable(dia) {
+
+    let datosInicial = datos[dia]["Poblacion"];
+
+    let contagiadoConVac1 =
+        contagiadoSinVac1 =
+        contagiadoConNoVac1 =
+        contagiadoSinNoVac1 = 0;
+
+    let sanoConVac1 =
+        sanoSinVac1 =
+        sanoConNoVac1 =
+        sanoSinNoVac1 = 0;
+
+    let recuperadoConVac1 =
+        recuperadoSinVac1 =
+        recuperadoConNoVac1 =
+        recuperadoSinNoVac1 = 0;
+
+    let muertos = 0;
+
+    console.log(datosInicial.length);
+    for (let i = 0; i < datosInicial.length; i++) {
+        for (let j = 0; j < datosInicial[i].length; j++) {
+            switch (datosInicial[i][j]) {
+                case 0:
+                    contagiadoConVac1++;
+                    console.log(contagiadoConVac1, "entro?")
+                    break;
+                case 1:
+                    contagiadoSinVac1++;
+                    break;
+                case 2:
+                    contagiadoConNoVac1++;
+                    break;
+                case 3:
+                    contagiadoSinNoVac1++;
+                    break;
+                case 4:
+                    sanoConVac1++;
+                    break;
+                case 5:
+                    sanoSinVac1++;
+                    break;
+                case 6:
+                    sanoConNoVac1++;
+                    break;
+                case 7:
+                    sanoSinNoVac1++;
+                    break;
+                case 8:
+                    recuperadoConVac1++;
+                    break;
+                case 9:
+                    recuperadoSinVac1++;
+                    break;
+                case 10:
+                    recuperadoConNoVac1++;
+                    break;
+                case 11:
+                    recuperadoSinNoVac1++;
+                    break;
+                default:
+                    muertos++;
+                    break;
+            }
+        }
+    }
+    let item = {
+        contagiadoConVac: contagiadoConVac1,
+        contagiadoSinVac: contagiadoSinVac1,
+        contagiadoConNoVac: contagiadoConNoVac1,
+        contagiadoSinNoVac: contagiadoSinNoVac1,
+        sanoConVac: sanoConVac1,
+        sanoSinVac: sanoSinVac1,
+        sanoConNoVac: sanoConNoVac1,
+        sanoSinNoVac: sanoSinNoVac1,
+        recuperadoConVac: recuperadoConVac1,
+        recuperadoSinVac: recuperadoSinVac1,
+        recuperadoConNoVac: recuperadoConNoVac1,
+        recuperadoSinNoVac: recuperadoSinNoVac1,
+    }
+    contagiadoConVac.innerText = contagiadoConVac1;
+    contagiadoSinVac.innerText = contagiadoSinVac1;
+    contagiadoConNoVac.innerText = contagiadoConNoVac1;
+    contagiadoSinNoVac.innerText = contagiadoSinNoVac1;
+
+    sanoConVac.innerText = sanoConVac1;
+    sanoSinVac.innerText  = sanoSinVac1;
+    sanoConNoVac.innerText = sanoConNoVac1;
+    sanoSinNoVac.innerText  = sanoSinNoVac1;
+
+    recuperadoConVac.innerText = recuperadoConVac1;
+    recuperadoSinVac.innerText = recuperadoSinVac1;
+    recuperadoConNoVac.innerText = recuperadoConNoVac1;
+    recuperadoSinNoVac.innerText = recuperadoSinNoVac1;
+    totalCon.innerText = contagiadoConVac1+sanoConVac1+recuperadoConVac1;
+    totalSin.innerText = contagiadoConNoVac1+sanoConNoVac1+recuperadoConNoVac1;
+    totalVac.innerText = contagiadoSinVac1+sanoSinVac1+recuperadoSinVac1;
+    totalNoVac.innerText = contagiadoSinNoVac1+sanoSinNoVac1+recuperadoSinNoVac1;
+    totalMuertos.innerText = muertos;
+    
+    return item;
+
+}
+
+this.inicializador();
+
+function previousDay() {
+    previousDayButton.addEventListener("click", (event) => {
+        if (contadorDias >= 0) {
+            diaProgress.value = contadorDias;
+            diaSpanElement.innerText = contadorDias;
+            diaPoblacion.innerText = contadorDias;
+            sanos.innerText = datos[contadorDias]["Sanos"];
+            contagiados.innerText = datos[contadorDias]["Contagiados"];
+            recuperados.innerText = datos[contadorDias]["Recuperados"];
+            muertos.innerText = datos[contadorDias]["Muertos"];
+            getSumaTable(contadorDias);
+            botonNextDay.disabled = false;
+        } else {
+            previousDayButton.disabled = true;
+        }
+    });
+    contadorDias--;
+}
+ 
+function nextDay() {
+    botonNextDay.addEventListener("click", (event) => {
+        console.log(contadorDias, "contador")
+        if (contadorDias < datos.length) {
+            previousDayButton.disabled = false;
+            diaProgress.value = contadorDias;
+            diaSpanElement.innerText = contadorDias;
+            diaPoblacion.innerText = contadorDias;
+            sanos.innerText = datos[contadorDias]["Sanos"];
+            contagiados.innerText = datos[contadorDias]["Contagiados"];
+            recuperados.innerText = datos[contadorDias]["Recuperados"];
+            muertos.innerText = datos[contadorDias]["Muertos"];
+            getSumaTable(contadorDias);
+            previousDayButton.disabled = false;
+        } else {
+            botonNextDay.disabled = true;
+        }
+    });
+    contadorDias++;
+}
+
+ function createHistogram(datos){
+    console.log(datos, "desde create histogram");
     //Width and height
     var w = 600;
     var h = 310;
@@ -87,7 +250,7 @@ const createHistogram = (poblacion) => {
         .scale(xScale)
         .orient("bottom")
         .ticks(12);
-    
+
 
     //Define Y axis
     var yAxis = d3.svg.axis()
@@ -129,19 +292,19 @@ const createHistogram = (poblacion) => {
         .attr("transform", "translate(0," + (h - padding + 5) + ")")
         .call(xAxis);
 
-    svg.append("text")      // text label for the x axis
-        .attr("x", 265 )
-        .attr("y",  290 )
+    svg.append("text") // text label for the x axis
+        .attr("x", 265)
+        .attr("y", 290)
         .style("text-anchor", "middle")
         .text("Date");
-    
+
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 10)
-        .attr("x",0 - (h / 2))
+        .attr("x", 0 - (h / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Value");    
+        .text("Value");
 
     //Create Y axis
     svg.append("g")
@@ -152,7 +315,6 @@ const createHistogram = (poblacion) => {
     //On click, update with new data			
     d3.select("#nextDay")
         .on("click", function () {
-             
 
             //New values for dataset
             var numValues = dataset.length; //Count original length of dataset
@@ -206,6 +368,7 @@ const createHistogram = (poblacion) => {
     // Append svg parent
 }
 
+this.createHistogram(datos);
 /*loadNames().then((datos) => {
     //console.log(datos[0]["Sanos"], "sanos");
     let sanos = document.getElementById("sanos");

@@ -13,28 +13,101 @@ body {
     box-sizing: content-box;
 }
 
-.container{
-    display:flex;
+.container {
+    display: flex;
 }
 
 .sidebar {
-    height: 100%;
+    height: 150vh;
     width: 20em;
     background-color: grey;
-    max-width:100%;
+    max-width: 100%;
+    
 }
 
-.box{
-    display:grid;
-    border:1px solid black;
-    place-items:center;
-    width:70vw;
-    height:70vh;
-    margin-left:4vw;
-    margin-top:11.5vh;
-    margin-right:4vw;
+.box {
+    display: grid;
+    border: 1px solid black;
+    place-items: center;
+    width: 70vw;
+    height: 70vh;
+    margin-left: 4vw;
+    margin-top: 11.5vh;
+    margin-right: 4vw;
+    margin-bottom: 0vh;
 }
 
-.datos > p {
+.boxTable {
+    display: grid;
+    place-items: center;
+    width: 70vw;
+    height: 30vh;
+    margin-left: 4vw;
+    margin-top: 0vh;
+    margin-right: 4vw;
+}
+
+.boxTable>* {
+    margin: 0;
+    padding: 0;
+}
+
+.boxTable>h3 {
+    margin-bottom: 0;
+    padding: 0;
+}
+
+#tableDays {
+    padding: 0;
+    margin: 0;
+}
+
+.datos>p {
     font-size: 1.24em;
+}
+
+#tableDays {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.667em;
+    border-collapse: collapse;
+    width: 55.9vw;
+    margin-left: 0em;
+    font-weight: 400;
+}
+
+#muertosValor {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: 700;
+}
+
+#muertosValor1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.267em;
+    font-weight: 400;
+}
+
+#tableDays td, #tableDays th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#tableDays tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+#tableDays tr {
+    background-color: #ffffff;
+}
+
+#tableDays tr:hover {
+    background-color: #ddd;
+}
+
+#tableDays th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
 }
