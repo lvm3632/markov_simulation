@@ -27,6 +27,7 @@ let previousDayButton = document.getElementById("previousDay");
 let botonNextDay = document.getElementById("nextDay");
 let diaPoblacion = document.getElementById("diaPoblacion");
 
+
 // Tabla parámetros: 
 let contagiadoConVac = document.getElementById("contagiadoConVac");
 let contagiadoConNoVac = document.getElementById("contagiadoConNoVac");
@@ -53,9 +54,17 @@ let poblacionTotal = document.getElementById("poblacionTotal");
 
 let svg = "";
 
+
+// Table chartPoint: Variables
+let diaChartPoints; // span
+let diaPieChart; // span
+let diaBarSort;
+
+
 function inicializador() {
     diaProgress.value = contadorDias + 1;
     diaProgress.max = datos.length - 1;
+    diaPoblacion.innerText = 1;
     diaSpanElement.innerText = 1;
     sanos.innerText = datos[0]["Sanos"];
     contagiados.innerText = datos[0]["Contagiados"];
@@ -64,7 +73,7 @@ function inicializador() {
     poblacionTotal.innerText = poblacionTotalNumber;
     muertos.innerText = datos[0]["Muertos"];
     previousDayButton.disabled = true;
-    contadorDias=0;
+    contadorDias = 0;
     this.getSumaTable(0);
 }
 
@@ -183,12 +192,13 @@ function previousDay() {
             diaProgress.value = contadorDias;
             diaSpanElement.innerText = contadorDias;
             diaPoblacion.innerText = contadorDias;
+            diaChartPoints.innerText = contadorDias;
             sanos.innerText = datos[contadorDias]["Sanos"];
             contagiados.innerText = datos[contadorDias]["Contagiados"];
             recuperados.innerText = datos[contadorDias]["Recuperados"];
             muertos.innerText = datos[contadorDias]["Muertos"];
             getSumaTable(contadorDias);
-            d3.select("#contadorDiasBueno").text("Día: " + contadorDias);
+            //d3.select("#contadorDiasBueno").text("Día: " + contadorDias);
             botonNextDay.disabled = false;
         } else {
             previousDayButton.disabled = true;
@@ -202,24 +212,29 @@ let firstCreate = true;
 
 function nextDay() {
 
-        if(firstCreate){
-            this.inicializador();
-            this.createHistogram(datos);
-            firstCreate = false;
-            return;
-        }
-        
+    if (firstCreate) {
+        this.inicializador();
+        console.log("entra antes?")
+        ///this.createHistogram(datos);
+        //this.createPieChart(datos);
+        this.createBarSort(datos);
+        firstCreate = false;
+        return;
+    }
+
     botonNextDay.addEventListener("click", (event) => {
         console.log(contadorDias, "contador")
         if (contadorDias < datos.length) {
             diaProgress.value = contadorDias;
             diaSpanElement.innerText = contadorDias;
             diaPoblacion.innerText = contadorDias;
+            //diaChartPoints.innerText = contadorDias;
+            //diaPieChart.innerText = contadorDias;
             sanos.innerText = datos[contadorDias]["Sanos"];
             contagiados.innerText = datos[contadorDias]["Contagiados"];
             recuperados.innerText = datos[contadorDias]["Recuperados"];
             muertos.innerText = datos[contadorDias]["Muertos"];
-            d3.select("#contadorDiasBueno").text("Día: " + (contadorDias));
+            //d3.select("#contadorDiasBueno").text("Día: " + (contadorDias));
             getSumaTable(contadorDias);
             previousDayButton.disabled = false;
         } else {
@@ -230,8 +245,15 @@ function nextDay() {
 }
 //this.inicializador();
 
+let firstTimeChartPoints = true;
 
 function createHistogram(datos) {
+
+    if (firstTimeChartPoints) {
+        showChartPoints();
+        firstTimeChartPoints = false;
+    }
+
     //Width and height
     console.log(contadorDias, "dia en create en histogram");
     var w = 600;
@@ -311,8 +333,8 @@ function createHistogram(datos) {
         .attr("y", 290)
         .style("text-anchor", "middle")
         .attr("id", "contadorDiasBueno")
-        .text("Día: 1");
-        
+        //.text("Día: 1");
+
     /*svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 10)
@@ -330,7 +352,7 @@ function createHistogram(datos) {
     //On click, update with new data		
     let prevData = [];
 
-  
+
     d3.select("#nextDay")
         .on("click", function () {
             console.log(contadorDias, "dia en create");
@@ -345,10 +367,10 @@ function createHistogram(datos) {
                 dataset.push([newNumber1, newNumber2]); //Add new number to array
                 prevData.push([newNumber1, newNumber2]);
             }
-            
+
             //Update scale domains
             xScale.domain([0, d3.max(dataset, function (d) {
-               // console.log(d[0], "solo d")
+                // console.log(d[0], "solo d")
                 return d[0];
             })]);
             yScale.domain([0, d3.max(dataset, function (d) {
@@ -384,22 +406,22 @@ function createHistogram(datos) {
                 .call(yAxis);
 
         });
-    
+
     //On click, update with new data	
-    
+
     d3.select("#previousDay")
         .on("click", function () {
             //d3.select("#contadorDiasBueno").text("hola");
             //New values for dataset
             var maxRange = Math.random() * 1000; //Max range of new values
             dataset = []; //Initialize empty array
-            
+
             for (var i = 0; i < numDataPoints; i++) { //Loop numValues times
-                dataset.push(prevData[i]); 
+                dataset.push(prevData[i]);
             }
             //Update scale domains
             xScale.domain([0, d3.max(dataset, function (d) {
-               // console.log(d[0], "solo d")
+                // console.log(d[0], "solo d")
                 return d[0];
             })]);
             yScale.domain([0, d3.max(dataset, function (d) {
@@ -434,12 +456,344 @@ function createHistogram(datos) {
                 .delay(500)
                 .call(yAxis);
 
-           // console.log("entra hasta acA??")
+            // console.log("entra hasta acA??")
 
         });
     // Append svg parent
 }
 
+let firstTimePieChart = true;
 
-//this.createHistogram(datos);
+function createPieChart(datos) {
 
+    if (firstTimePieChart) {
+        showPieChart();
+        firstTimePieChart = false;
+    }
+    let w = 250;
+    let h = 250;
+
+    let dataset = [5, 10, 20, 45, 6, 25];
+
+    let outerRadius = w / 2;
+    let innerRadius = 0;
+    let arc = d3.svg.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius);
+    let pie = d3.layout.pie();
+
+    //Easy colors accessible via a 10-step ordinal scale
+    let color = d3.scale.category10();
+
+    //Create SVG element
+    let svg = d3.select("#pieChart")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h);
+    //Set up groups
+    let arcs = svg.selectAll("g.arc")
+        .data(pie(dataset))
+        .enter()
+        .append("g")
+        .attr("class", "arc")
+        .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+    //Draw arc paths
+    arcs.append("path")
+        .attr("fill", function (d, i) {
+            return color(i);
+        })
+        .attr("d", arc);
+
+    //Labels
+    arcs.append("text")
+        .attr("transform", function (d) {
+            return "translate(" + arc.centroid(d) + ")";
+        })
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d.value;
+        });
+}
+
+let firstTimeBarSort = true;
+function createBarSort(datos) {
+    if (firstTimeBarSort) {
+        showBarSort();
+        firstTimeBarSort = false;
+    }
+    //Sort button state
+    //Default action for button will be to sort by *value*
+    var sortByNameOrValue = false;
+    //New, dynamic width value pulled from .chartContainer
+    var w = d3.select(".chartContainer").node().clientWidth;
+    //Height, padding
+    var h = 350;
+    var padding = 35;
+    //Sample data
+    var dataset = [{
+            name: "😷",
+            sales: 50,
+            bonus: 5
+        },
+        {
+            name: "😠",
+            sales: 40,
+            bonus: 10
+        },
+        {
+            name: "💉",
+            sales: 65,
+            bonus: 15
+        },
+        {
+            name: "🏥🚫",
+            sales: 55,
+            bonus: 30
+        },
+        {
+            name: "😷",
+            sales: 45,
+            bonus: 20
+        },
+        {
+            name: "🏥🚫",
+            sales: 30,
+            bonus: 5
+        }
+    ];
+    //Configure x and y scale functions
+    var xScale = d3.scale.ordinal()
+        .domain(d3.range(dataset.length))
+        .rangeRoundBands([padding, w - padding], 0.05);
+    //Now using two different y scales for two different charts
+    var salesScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, function (d) {
+            return d.sales;
+        })])
+        .rangeRound([h - padding, padding]);
+    var bonusScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, function (d) {
+            return d.bonus;
+        })])
+        .rangeRound([h - padding, padding]);
+    //Now using two different y axes
+    var salesAxis = d3.svg.axis()
+        .scale(salesScale)
+        .orient("left")
+        .ticks(5);
+    var bonusAxis = d3.svg.axis()
+        .scale(bonusScale)
+        .orient("left")
+        .ticks(5)
+    //Create SVG element
+    var svg = d3.select("#salesChartContainer") //New target location!
+        .append("svg")
+        .attr("id", "salesChart")
+        .attr("width", w)
+        .attr("height", h);
+    //Create groups
+    var groups = svg.selectAll("g")
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("class", "bar")
+        .attr("transform", function (d, i) {
+            return "translate(" + xScale(i) + ",0)";
+        });
+    //Add bar to each group
+    var rects = groups.append("rect")
+        .attr("x", 0)
+        .attr("y", function (d) {
+            return h - padding;
+        })
+        .attr("width", xScale.rangeBand())
+        .attr("height", 0)
+        .attr("fill", "SteelBlue");     // Cambia color de barra
+    //Add label to each group
+    groups.append("text")
+        .attr("x", xScale.rangeBand() / 2)
+        .attr("y", function (d) {
+            return salesScale(d.sales) + (-15);
+        })
+        .text(function (d) {
+            return d.name + ": " + d.sales;
+        })
+    //Transition rects into place
+    rects.transition()
+        .delay(function (d, i) {
+            return i * 100;
+        })
+        .duration(1500)
+        .attr("y", function (d) {
+            return salesScale(d.sales);
+        })
+        .attr("height", function (d) {
+            return h - padding - salesScale(d.sales);
+        });
+    //Create y axis
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding + ",0)")
+        .attr("opacity", 0)
+        .call(salesAxis)
+        .transition()
+        .delay(2000)
+        .duration(1500)
+        .attr("opacity", 1.0);
+    //
+    // Make the second chart (bonus data)
+    //
+    //Create SVG element
+    svg = d3.select("#bonusChartContainer") //New target location!
+        .append("svg")
+        .attr("id", "bonusChart")
+        .attr("width", w)
+        .attr("height", h);
+
+    //Create groups
+    groups = svg.selectAll("g")
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("class", "bar")
+        .attr("transform", function (d, i) {
+            return "translate(" + xScale(i) + ",0)";
+        });
+    //Add bar to each group
+    rects = groups.append("rect")
+        .attr("x", 0)
+        .attr("y", function (d) {
+            return h - padding;
+        })
+        .attr("width", xScale.rangeBand())
+        .attr("height", 0)
+        .attr("fill", "SteelBlue");
+    //Add label to each group
+    groups.append("text")
+        .attr("x", xScale.rangeBand() / 2)
+        .attr("y", function (d) {
+            return bonusScale(d.bonus) + 14;
+        })
+        .text(function (d) {
+            return d.name + ": " + d.bonus;
+        })
+    //Transition rects into place
+    rects.transition()
+        .delay(function (d, i) {
+            return i * 100;
+        })
+        .duration(1500)
+        .attr("y", function (d) {
+            return bonusScale(d.bonus);
+        })
+        .attr("height", function (d) {
+            return h - padding - bonusScale(d.bonus);
+        });
+    //Create y axis
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding + ",0)")
+        .attr("opacity", 0)
+        .call(bonusAxis)
+        .transition()
+        .delay(2000)
+        .duration(1500)
+        .attr("opacity", 1.0);
+    //New functionality for interaction for ALL groups
+    //in BOTH charts
+    d3.selectAll("g.bar")
+        .on("mouseover", function (d) {
+            var thisName = d.name;
+            d3.selectAll("g.bar")
+                .filter(function (d) {
+                    if (thisName == d.name) {
+                        return true; //…then it's a match
+                    }
+                })
+                .classed("highlight", true);
+        })
+        .on("mouseout", function () {
+            d3.selectAll("g.bar")
+                .classed("highlight", false);
+        })
+    //Sorting logic
+    d3.select("#sort")
+        .on("click", function () {
+
+            //Need to reselect all groups in each chart
+            d3.selectAll("#salesChart g.bar").sort(function (a, b) {
+                    if (sortByNameOrValue) {
+                        return d3.ascending(a.name, b.name);
+                    } else {
+                        return d3.ascending(a.sales, b.sales);
+                    }
+                })
+                .transition()
+                .delay(function (d, i) {
+                    return i * 50;
+                })
+                .duration(1000)
+                .attr("transform", function (d, i) {
+                    return "translate(" + xScale(i) + ",0)";
+                });
+
+            d3.selectAll("#bonusChart g.bar").sort(function (a, b) {
+                    if (sortByNameOrValue) {
+                        return d3.ascending(a.name, b.name);
+                    } else {
+                        return d3.ascending(a.bonus, b.bonus);
+                    }
+                })
+                .transition()
+                .delay(function (d, i) {
+                    return i * 50;
+                })
+                .duration(1000)
+                .attr("transform", function (d, i) {
+                    return "translate(" + xScale(i) + ",0)";
+                });
+
+            //Update text in button
+            d3.select(this)
+                .text(function () {
+                    if (sortByNameOrValue) {
+                        return "Ordenar de menor a mayor";
+                    } else {
+                        return "Estado inicial";
+                    }
+                })
+
+            //Flip value of boolean
+            sortByNameOrValue = !sortByNameOrValue;
+        });
+
+}
+//this.createPieChart(datos);
+
+
+
+function showChartPoints() {
+    const template = document.getElementById('templateChartPoints');
+    const content = template.content.cloneNode(true);
+    let box = document.getElementById("box");
+    box.append(content);
+    diaChartPoints = document.getElementById("diaChartPoints"); // span
+}
+
+
+function showPieChart() {
+    const template = document.getElementById('templatePieChart');
+    const content = template.content.cloneNode(true);
+    let box = document.getElementById("box");
+    box.append(content);
+    diaPieChart = document.getElementById("diaPieChart"); // span
+}
+
+
+function showBarSort() {
+    const template = document.getElementById('templateBarSort');
+    const content = template.content.cloneNode(true);
+    let box = document.getElementById("box");
+    box.append(content);
+    diaBarSort = document.getElementById("diaBarSort"); // span
+}
