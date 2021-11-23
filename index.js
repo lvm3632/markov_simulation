@@ -58,7 +58,8 @@ let svg = "";
 // Table chartPoint: Variables
 let diaChartPoints; // span
 let diaPieChart; // span
-let diaBarSort;
+let diaBarSort; // span
+let diaStackChart; // span
 
 
 function inicializador() {
@@ -211,13 +212,13 @@ function previousDay() {
 let firstCreate = true;
 
 function nextDay() {
-
     if (firstCreate) {
         this.inicializador();
         console.log("entra antes?")
         ///this.createHistogram(datos);
         //this.createPieChart(datos);
-        this.createBarSort(datos);
+        //this.createBarSort(datos);
+        this.createStackChart(datos);
         firstCreate = false;
         return;
     }
@@ -333,7 +334,7 @@ function createHistogram(datos) {
         .attr("y", 290)
         .style("text-anchor", "middle")
         .attr("id", "contadorDiasBueno")
-        //.text("Día: 1");
+    //.text("Día: 1");
 
     /*svg.append("text")
         .attr("transform", "rotate(-90)")
@@ -516,6 +517,7 @@ function createPieChart(datos) {
 }
 
 let firstTimeBarSort = true;
+
 function createBarSort(datos) {
     if (firstTimeBarSort) {
         showBarSort();
@@ -608,7 +610,7 @@ function createBarSort(datos) {
         })
         .attr("width", xScale.rangeBand())
         .attr("height", 0)
-        .attr("fill", "SteelBlue");     // Cambia color de barra
+        .attr("fill", "SteelBlue"); // Cambia color de barra
     //Add label to each group
     groups.append("text")
         .attr("x", xScale.rangeBand() / 2)
@@ -769,8 +771,158 @@ function createBarSort(datos) {
 
 }
 //this.createPieChart(datos);
+let firstTimeStackChart = true;
+function createStackChart(datos) {
+     if (firstTimeStackChart) {
+        showStackChart();
+        firstTimeStackChart = false;
+    }
+    //Set up stack method
+    var stack = d3.layout.stack()
+        .values(function (d) {
+            return d.emissions;
+        })
+        .order("reverse");
+    //Width, height, padding
+    var w = 1200;
+    var h = 650;
+    var padding = [20, 10, 50, 100]; //Top, right, bottom, left
+    //Set up date format function (years)
+    var dateFormat = d3.time.format("%Y");
+    //Define scales with ranges (domains will be set later)
+    var xScale = d3.time.scale()
+        .range([padding[3], w - padding[1] - padding[3]]);
 
+    var yScale = d3.scale.linear()
+        //.range([ 0, h ]);
+        .range([padding[0], h - padding[2]]);
 
+    //Define axes
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom")
+        .ticks(10)
+        .tickFormat(function (d) {
+            return dateFormat(d);
+        });
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left")
+        .ticks(5);
+    //Define area generator
+    var area = d3.svg.area()
+        .x(function (d) {
+            return xScale(dateFormat.parse(d.x)); //Updated
+        })
+        .y0(function (d) {
+            return yScale(d.y0); //Updated
+        })
+        .y1(function (d) {
+            return yScale(d.y0 + d.y); //Updated
+        });
+    //Easy colors accessible via a 10-step ordinal scale
+    var color = d3.scale.category10();
+
+    //Create the SVG
+    var svg = d3.select("#boxStackChart")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h);
+
+    d3.csv("./g7_co2_emissions.csv", function (data) {
+        console.log(data ,"data")
+        //New array with all the years, for referencing later
+        var years = ["1961", "1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010"];
+
+        var dataset = [];
+        for (var i = 0; i < data.length; i++) {
+            //Create new object with this country's name and empty array
+            dataset[i] = {
+                country: data[i].countryName,
+                emissions: []
+            };
+            //Loop through all the years
+            for (var j = 0; j < years.length; j++) {
+                //Default value, used in case no value is present
+                var amount = null;
+                // If value is not empty
+                if (data[i][years[j]]) {
+                    amount = +data[i][years[j]];
+                }
+                //Add a new object to the emissions data array
+                //for this country
+                dataset[i].emissions.push({
+                    x: years[j],
+                    y: amount
+                });
+            }
+        }
+        //Stack the data!
+        stack(dataset);
+        //Uncomment to log the original data to the console
+        //console.log(data);
+        //Uncomment to log the newly restructured dataset to the console
+        //console.log(dataset);
+        //Now that the data is ready, we can check its
+        //min and max values to set our scales' domains!
+        xScale.domain([
+            d3.min(years, function (d) {
+                return dateFormat.parse(d);
+            }),
+            d3.max(years, function (d) {
+                return dateFormat.parse(d);
+            })
+        ]);
+        //Need to recalcluate the max value for yScale  
+        //differently, now that everything is stacked.
+        //Loop once for each year, and get the total value
+        //of CO2 for that year.
+        var totals = [];
+        for (i = 0; i < years.length; i++) {
+            totals[i] = 0;
+            for (j = 0; j < dataset.length; j++) {
+                totals[i] += dataset[j].emissions[i].y;
+            }
+        }
+        yScale.domain([d3.max(totals), 0]);
+        //Areas
+        //
+        //Now that we are creating multiple paths, we can use the
+        //selectAll/data/co2/enter/append pattern to generate as many
+        //as needed.
+        //Make a path for each country
+        var paths = svg.selectAll("path")
+            .data(dataset)
+            .enter()
+            .append("path")
+            .attr("class", "area")
+            .attr("d", function (d) {
+                //Calculate path based on only d.emissions array,
+                //not all of d (which would include the country name)
+                return area(d.emissions);
+            })
+            .attr("stroke", "none")
+            .attr("fill", function (d, i) {
+                return color(i);
+            });
+        //Append a title with the country name (so we get easy tooltips)
+        paths.append("title")
+            .text(function (d) {
+                return d.country;
+            });
+        //Create axes
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (h - padding[2]) + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + padding[3] + ",0)")
+            .call(yAxis);
+    });
+}
 
 function showChartPoints() {
     const template = document.getElementById('templateChartPoints');
@@ -796,4 +948,12 @@ function showBarSort() {
     let box = document.getElementById("box");
     box.append(content);
     diaBarSort = document.getElementById("diaBarSort"); // span
+}
+
+function showStackChart() {
+    const template = document.getElementById('templateStackChart');
+    const content = template.content.cloneNode(true);
+    let box = document.getElementById("box");
+    box.append(content);
+    diaStackChart = document.getElementById("diaStackChart"); // span
 }
