@@ -18,7 +18,7 @@ body {
 }
 
 .sidebar {
-    height: 150vh;
+    height: 180vh;
     width: 20em;
     background-color: grey;
     max-width: 100%;
@@ -30,11 +30,12 @@ body {
     border: 1px solid black;
     place-items: center;
     width: 70vw;
-    height: 70vh;
+    height: 74.5vh;
+   
     margin-left: 4vw;
     margin-top: 11.5vh;
     margin-right: 4vw;
-    margin-bottom: 0vh;
+    margin-bottom:3.5em;
 }
 
 .boxTable {

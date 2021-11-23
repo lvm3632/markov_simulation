@@ -18,9 +18,6 @@ function getJSON(url) {
 }
 getJSON("test.json");
 
-// Datos
-console.log(datos, "datos");
-
 let contadorDias = -1;
 let diaSpanElement = document.getElementById("dias");
 let diaProgress = document.getElementById("progressDias");
@@ -52,20 +49,27 @@ let totalCon = document.getElementById("totalCon");
 let totalSin = document.getElementById("totalSin");
 let totalVac = document.getElementById("totalVac");
 let totalNoVac = document.getElementById("totalNoVac");
-
+let poblacionTotalNumber = 0;
 let totalMuertos = document.getElementById("muertosValor");
+let poblacionTotal = document.getElementById("poblacionTotal");
+
+let svg = "";
+
 function inicializador() {
 
     diaProgress.value = contadorDias + 1;
     diaProgress.max = datos.length - 1;
-    diaSpanElement.innerText = 0;
+    diaSpanElement.innerText = 1;
     sanos.innerText = datos[0]["Sanos"];
     contagiados.innerText = datos[0]["Contagiados"];
     recuperados.innerText = datos[0]["Recuperados"];
+    poblacionTotalNumber = datos[0]["Contagiados"] + datos[0]["Recuperados"] + datos[0]["Sanos"] + datos[0]["Muertos"];
+    poblacionTotal.innerText = poblacionTotalNumber;
     muertos.innerText = datos[0]["Muertos"];
     previousDayButton.disabled = true;
-  
+    contadorDias=1;
     this.getSumaTable(0);
+
 
 }
 
@@ -96,7 +100,6 @@ function getSumaTable(dia) {
             switch (datosInicial[i][j]) {
                 case 0:
                     contagiadoConVac1++;
-                    console.log(contagiadoConVac1, "entro?")
                     break;
                 case 1:
                     contagiadoSinVac1++;
@@ -157,25 +160,28 @@ function getSumaTable(dia) {
     contagiadoSinNoVac.innerText = contagiadoSinNoVac1;
 
     sanoConVac.innerText = sanoConVac1;
-    sanoSinVac.innerText  = sanoSinVac1;
+    sanoSinVac.innerText = sanoSinVac1;
     sanoConNoVac.innerText = sanoConNoVac1;
-    sanoSinNoVac.innerText  = sanoSinNoVac1;
+    sanoSinNoVac.innerText = sanoSinNoVac1;
 
     recuperadoConVac.innerText = recuperadoConVac1;
     recuperadoSinVac.innerText = recuperadoSinVac1;
     recuperadoConNoVac.innerText = recuperadoConNoVac1;
     recuperadoSinNoVac.innerText = recuperadoSinNoVac1;
-    totalCon.innerText = contagiadoConVac1+sanoConVac1+recuperadoConVac1;
-    totalSin.innerText = contagiadoConNoVac1+sanoConNoVac1+recuperadoConNoVac1;
-    totalVac.innerText = contagiadoSinVac1+sanoSinVac1+recuperadoSinVac1;
-    totalNoVac.innerText = contagiadoSinNoVac1+sanoSinNoVac1+recuperadoSinNoVac1;
+
+    totalCon.innerText = contagiadoConVac1 + sanoConVac1 + recuperadoConVac1;
+    totalSin.innerText = contagiadoConNoVac1 + sanoConNoVac1 + recuperadoConNoVac1;
+    totalVac.innerText = contagiadoSinVac1 + sanoSinVac1 + recuperadoSinVac1;
+    totalNoVac.innerText = contagiadoSinNoVac1 + sanoSinNoVac1 + recuperadoSinNoVac1;
     totalMuertos.innerText = muertos;
-    
+
     return item;
 
 }
 
 this.inicializador();
+
+
 
 function previousDay() {
     previousDayButton.addEventListener("click", (event) => {
@@ -188,6 +194,7 @@ function previousDay() {
             recuperados.innerText = datos[contadorDias]["Recuperados"];
             muertos.innerText = datos[contadorDias]["Muertos"];
             getSumaTable(contadorDias);
+            d3.select("#contadorDiasBueno").text("Día: " + contadorDias);
             botonNextDay.disabled = false;
         } else {
             previousDayButton.disabled = true;
@@ -195,12 +202,13 @@ function previousDay() {
     });
     contadorDias--;
 }
- 
+
+
+
 function nextDay() {
     botonNextDay.addEventListener("click", (event) => {
-        console.log(contadorDias, "contador")
+        console.log(datos.length, "contador")
         if (contadorDias < datos.length) {
-            previousDayButton.disabled = false;
             diaProgress.value = contadorDias;
             diaSpanElement.innerText = contadorDias;
             diaPoblacion.innerText = contadorDias;
@@ -208,6 +216,7 @@ function nextDay() {
             contagiados.innerText = datos[contadorDias]["Contagiados"];
             recuperados.innerText = datos[contadorDias]["Recuperados"];
             muertos.innerText = datos[contadorDias]["Muertos"];
+            d3.select("#contadorDiasBueno").text("Día: " + (contadorDias+1));
             getSumaTable(contadorDias);
             previousDayButton.disabled = false;
         } else {
@@ -217,16 +226,19 @@ function nextDay() {
     contadorDias++;
 }
 
- function createHistogram(datos){
-    console.log(datos, "desde create histogram");
+
+
+function createHistogram(datos) {
     //Width and height
     var w = 600;
     var h = 310;
     var padding = 60;
     //Dynamic, random dataset
     var dataset = []; //Initialize empty array
-    var numDataPoints = 50; //Number of dummy data points to create
+    var numDataPoints = poblacionTotalNumber; //Number of dummy data points to create
+
     var maxRange = Math.random() * 1000; //Max range of new values
+
     for (var i = 0; i < numDataPoints; i++) { //Loop numDataPoints times
         var newNumber1 = Math.floor(Math.random() * maxRange); //New random integer
         var newNumber2 = Math.floor(Math.random() * maxRange); //New random integer
@@ -249,24 +261,22 @@ function nextDay() {
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
-        .ticks(12);
-
+        .ticks(0)
 
     //Define Y axis
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .orient("left")
-        .ticks(12);
+        .ticks(0)
 
     //Create SVG element
-    var svg = d3.select(".chartPointsBox")
+    svg = d3.select(".chartPointsBox")
         .append("svg")
         .attr("width", w)
         .attr("height", h);
 
     var color = d3.scale.category20();
     //Create circles
-    console.log(dataset, "data")
     svg.append("g")
         .attr("id", "circles")
         //.attr("fill", "red")
@@ -296,15 +306,16 @@ function nextDay() {
         .attr("x", 265)
         .attr("y", 290)
         .style("text-anchor", "middle")
-        .text("Date");
+        .attr("id", "contadorDiasBueno")
+        .text("Día: 0");
 
-    svg.append("text")
+    /*svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 10)
         .attr("x", 0 - (h / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Value");
+        .text("Value");*/
 
     //Create Y axis
     svg.append("g")
@@ -312,25 +323,30 @@ function nextDay() {
         .attr("transform", "translate(" + (padding - 5) + ",0)")
         .call(yAxis);
 
-    //On click, update with new data			
+    //On click, update with new data		
+    let prevData = [];
+
     d3.select("#nextDay")
         .on("click", function () {
-
+            //d3.select("#contadorDiasBueno").text("hola");
             //New values for dataset
-            var numValues = dataset.length; //Count original length of dataset
             var maxRange = Math.random() * 1000; //Max range of new values
             dataset = []; //Initialize empty array
-            for (var i = 0; i < numValues; i++) { //Loop numValues times
+            for (var i = 0; i < numDataPoints; i++) { //Loop numValues times
                 var newNumber1 = Math.floor(Math.random() * maxRange); //New random integer
                 var newNumber2 = Math.floor(Math.random() * maxRange); //New random integer
                 dataset.push([newNumber1, newNumber2]); //Add new number to array
+                prevData.push([newNumber1, newNumber2]);
             }
-
+            
             //Update scale domains
             xScale.domain([0, d3.max(dataset, function (d) {
+               // console.log(d[0], "solo d")
                 return d[0];
             })]);
             yScale.domain([0, d3.max(dataset, function (d) {
+                //console.log(dataset, "dataset");
+                //console.log(d[1], "solo d")
                 return d[1];
             })]);
 
@@ -360,15 +376,67 @@ function nextDay() {
                 .delay(500)
                 .call(yAxis);
 
-            console.log("entra hasta acA??")
+        });
+    
+    //On click, update with new data			
+    d3.select("#previousDay")
+        .on("click", function () {
+            //d3.select("#contadorDiasBueno").text("hola");
+            //New values for dataset
+            var maxRange = Math.random() * 1000; //Max range of new values
+            dataset = []; //Initialize empty array
+            
+            for (var i = 0; i < numDataPoints; i++) { //Loop numValues times
+                dataset.push(prevData[i]); 
+            }
+            //Update scale domains
+            xScale.domain([0, d3.max(dataset, function (d) {
+               // console.log(d[0], "solo d")
+                return d[0];
+            })]);
+            yScale.domain([0, d3.max(dataset, function (d) {
+                //console.log(dataset, "dataset");
+                //console.log(d[1], "solo d")
+                return d[1];
+            })]);
+
+            //Update all circles
+            svg.selectAll("circle")
+                .data(dataset)
+                .transition()
+                .duration(1000)
+                .attr("cx", function (d) {
+                    return xScale(d[0]);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d[1]);
+                });
+
+            //Update X axis
+            svg.select(".x.axis")
+                .transition()
+                .duration(1500)
+                .delay(500)
+                .call(xAxis);
+
+            //Update Y axis
+            svg.select(".y.axis")
+                .transition()
+                .duration(1500)
+                .delay(500)
+                .call(yAxis);
+
+           // console.log("entra hasta acA??")
 
         });
+
 
 
     // Append svg parent
 }
 
 this.createHistogram(datos);
+
 /*loadNames().then((datos) => {
     //console.log(datos[0]["Sanos"], "sanos");
     let sanos = document.getElementById("sanos");

@@ -17,17 +17,26 @@
             background-color: white;
         }
 
-        .axis path,
+        .chartPointsBox .axis path,
         .axis line {
             fill: none;
-            stroke: black;
+            stroke: white;
             shape-rendering: crispEdges;
         }
+
+        .axis path,
+        .axis line {
+        fill: none;
+        stroke: red;
+        shape-rendering: crispEdges;
+        }
+
 
         .axis text {
             font-family: sans-serif;
             font-size: 0.5em;
         }
+     
     </style>
 </head>
 
@@ -47,6 +56,8 @@
                     <p>Sanos: <span id="sanos">150</span></p>
                     <p>Recuperados: <span id="recuperados">150</span></p>
                     <p>Muertos: <span id="muertos">150</span></p>
+                    <p>Poblacion total: <span id="poblacionTotal">150</span></p>
+
 
                 </fieldset>
 
@@ -68,7 +79,7 @@
 
                 <fieldset style="margin-top:2em; margin-right:3.5em; padding-bottom:1.267em;">
                     <p>Tipos de gráficas:</p>
-                    <label for="cars">Gráficas</label>
+                    <label for="lblGraficas">Gráficas</label>
 
                     <select name="graficas" id="graficas">
                         <option value="puntos">Puntos</option>
@@ -122,12 +133,12 @@
                     </svg>
                 </template> -->
                 <h2 style="margin:0.5em 5em 0 0; padding:0;">Chart Points</h2>
-                <svg id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
+                <svg style="border-bottom:1px solid black;" id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
                 </svg>
+                <p>🔴 Contagiado, 🔵 Recuperado, 🟢 Sano, ⚫ Muerto</p>
             </main>
-            <main class="boxTable" id="boxTableId" style="margin-top:2.5em;">
+            <main class="boxTable" id="boxTableId" style="margin-top:2.5em; display:none">
                 <h3>Población - Día <span id="diaPoblacion">0</span></h3>
-
                 <table id="tableDays">
                     <tbody>
                         <thead>
@@ -176,10 +187,10 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="text/javascript" src="./d3.js"></script>
     <script>
-        const template = document.getElementById('chartPointsGraph');
+        /*const template = document.getElementById('chartPointsGraph');
         const content = template.content.cloneNode(false);
         let box = document.getElementById("box");
-        box.append(content);
+        box.append(content);*/
     </script>
 
     <script>
@@ -192,6 +203,8 @@
             chart.attr("height", Math.round(targetWidth / aspect));
         }).trigger("resize");
     </script>
+
+
 </body>
 
 </html>
