@@ -106,6 +106,7 @@ def toJson(pob):
 def alrededorContagiado(pob,i,j):
     if i>0:
         if j>0:
+
             if pob[i-1][j-1] < 4:
                 return i-1,j-1
             if pob[i-1][j] < 4:
@@ -118,14 +119,15 @@ def alrededorContagiado(pob,i,j):
             if pob[i][j+1] < 4:
                 return i,j+1
     if i<len(pob)-1:
-        if j>0:
-            if pob[i+1][j-1] < 4:
-                return i+1,j-1
-            if pob[i+1][j] < 4:
-                return i+1,j
-        if j<len(pob[i])-1:
-            if pob[i+1][j+1] < 4:
-                return i+1,j+1
+        if j<len(pob[i+1])-1:
+            if j>0:
+                if pob[i+1][j-1] < 4:
+                    return i+1,j-1
+                if pob[i+1][j] < 4:
+                    return i+1,j
+            if j<len(pob[i])-1:
+                if pob[i+1][j+1] < 4:
+                    return i+1,j+1
     return i,j
 
 def nuevoSano(prob,estCub,estCubContagiado,estActual):
