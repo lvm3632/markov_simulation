@@ -208,7 +208,7 @@ function getSumaTable(dia) {
     contagiadoTotal.innerText = contagiados;
     sanoTotal.innerText = sanos;
     recuperadoTotal.innerText = recuperados;
-    poblacionTotalTable.innerText = datos[0]["Contagiados"] + datos[0]["Recuperados"] + datos[0]["Sanos"] + datos[0]["Muertos"];
+    poblacionTotalTable.innerText = datos[dia]["Contagiados"] + datos[dia]["Recuperados"] + datos[dia]["Sanos"];
 
     let percentage = (datos[dia]["Clasificacion"] * 100).toFixed(2) + "%";
     clasificacionValor.innerText =   percentage;
