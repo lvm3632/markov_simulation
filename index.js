@@ -250,9 +250,7 @@ function previousDay() {
     contadorDias--;
 }
 
-
 let firstCreate = true;
-
 function nextDay() {
     if (firstCreate) {
         this.inicializador();
@@ -286,7 +284,6 @@ function nextDay() {
     });
     contadorDias++;
 }
-//this.inicializador();
 
 let firstTimeChartPoints = true;
 
@@ -393,11 +390,9 @@ function createHistogram(datos) {
     //On click, update with new data		
     let prevData = [];
 
-
     d3.select("#nextDay")
         .on("click", function () {
             console.log(contadorDias, "dia en create");
-
             //d3.select("#contadorDiasBueno").text("hola");
             //New values for dataset
             var maxRange = Math.random() * 1000; //Max range of new values
@@ -408,7 +403,6 @@ function createHistogram(datos) {
                 dataset.push([newNumber1, newNumber2]); //Add new number to array
                 prevData.push([newNumber1, newNumber2]);
             }
-
             //Update scale domains
             xScale.domain([0, d3.max(dataset, function (d) {
                 // console.log(d[0], "solo d")
@@ -419,7 +413,6 @@ function createHistogram(datos) {
                 //console.log(d[1], "solo d")
                 return d[1];
             })]);
-
             //Update all circles
             svg.selectAll("circle")
                 .data(dataset)
@@ -431,14 +424,12 @@ function createHistogram(datos) {
                 .attr("cy", function (d) {
                     return yScale(d[1]);
                 });
-
             //Update X axis
             svg.select(".x.axis")
                 .transition()
                 .duration(1500)
                 .delay(500)
                 .call(xAxis);
-
             //Update Y axis
             svg.select(".y.axis")
                 .transition()
@@ -447,9 +438,7 @@ function createHistogram(datos) {
                 .call(yAxis);
 
         });
-
     //On click, update with new data	
-
     d3.select("#previousDay")
         .on("click", function () {
             //d3.select("#contadorDiasBueno").text("hola");
@@ -470,7 +459,6 @@ function createHistogram(datos) {
                 //console.log(d[1], "solo d")
                 return d[1];
             })]);
-
             //Update all circles
             svg.selectAll("circle")
                 .data(dataset)
@@ -482,34 +470,24 @@ function createHistogram(datos) {
                 .attr("cy", function (d) {
                     return yScale(d[1]);
                 });
-
             //Update X axis
             svg.select(".x.axis")
                 .transition()
                 .duration(1500)
                 .delay(500)
                 .call(xAxis);
-
             //Update Y axis
             svg.select(".y.axis")
                 .transition()
                 .duration(1500)
                 .delay(500)
                 .call(yAxis);
-
-            // console.log("entra hasta acA??")
-
         });
     // Append svg parent
 }
 
-//let firstTimePieChart = true;
 
 function createPieChart(datos, dia) {
-    /*if (firstTimePieChart) {
-        showPieChart();
-        firstTimePieChart = false;
-    }*/
     diaProgress.value = dia+1;
     diaSpanElement.innerText = dia+1;
     diaPoblacion.innerText = dia+1;
@@ -519,22 +497,18 @@ function createPieChart(datos, dia) {
     recuperados.innerText = datos[dia]["Recuperados"];
     muertos.innerText = datos[dia]["Muertos"];
     getSumaTable(dia);
-
     let w = 330;
     let h = 450;
     console.log(dia, "contador en pieChart")
     let dataset = [datos[dia].Contagiados, datos[dia].Sanos, datos[dia].Recuperados, datos[dia].Muertos];
-
     let outerRadius = (w / 2) - 50;
     let innerRadius = 0;
     let arc = d3.svg.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius);
     let pie = d3.layout.pie();
-
     //Easy colors accessible via a 10-step ordinal scale
     let color = d3.scale.d3_salud();
-
     //Create SVG element
     let svg = d3.select("#pieChart")
         .append("svg")
@@ -553,7 +527,6 @@ function createPieChart(datos, dia) {
             return color(i);
         })
         .attr("d", arc);
-
     //Labels
     let i = 0;
     let lblEstado = "";
@@ -563,11 +536,8 @@ function createPieChart(datos, dia) {
         })
         .attr("text-anchor", "middle")
         .text(function (d) {
-
             i++;
-
             if (d.value == 0) return;
-
             if (i == 1) {
                 lblEstado = d.value + " 😷";
             } else if (i == 2) {
@@ -579,19 +549,20 @@ function createPieChart(datos, dia) {
             } else {
                 lblEstado = d.value;
             }
-
             return lblEstado;
         });
 }
 
-let firstTimeBarSort = true;
-
-function createBarSort(datos) {
-    if (firstTimeBarSort) {
-        showBarSort();
-        $("#nextDay").html("Día siguiente");
-        firstTimeBarSort = false;
-    }
+function createBarSort(datos, dia) {
+    diaProgress.value = dia+1;
+    diaSpanElement.innerText = dia+1;
+    diaPoblacion.innerText = dia+1;
+    diaBarSort.innerText = dia+1;
+    sanos.innerText = datos[dia]["Sanos"];
+    contagiados.innerText = datos[dia]["Contagiados"];
+    recuperados.innerText = datos[dia]["Recuperados"];
+    muertos.innerText = datos[dia]["Muertos"];
+    getSumaTable(dia);
     //Sort button state
     //Default action for button will be to sort by *value*
     var sortByNameOrValue = false;
@@ -602,35 +573,25 @@ function createBarSort(datos) {
     var padding = 45;
     //Sample data
     var dataset = [{
-            name: "😷",
-            sales: 100,
+            name: "🙂",
+            sales: datos[dia].Sanos,
             bonus: 5
         },
         {
-            name: "😠",
-            sales: 40,
+            name: "😷",
+            sales: datos[dia].Contagiados,
             bonus: 10
         },
         {
-            name: "💉",
-            sales: 65,
+            name: "🛏️",
+            sales: datos[dia].Recuperados,
             bonus: 15
         },
         {
-            name: "🏥🚫",
-            sales: 55,
+            name: "💀",
+            sales: datos[dia].Muertos,
             bonus: 30
         },
-        {
-            name: "😷",
-            sales: 45,
-            bonus: 20
-        },
-        {
-            name: "🚫",
-            sales: 30,
-            bonus: 5
-        }
     ];
     //Configure x and y scale functions
     var xScale = d3.scale.ordinal()
@@ -672,6 +633,8 @@ function createBarSort(datos) {
             return "translate(" + xScale(i) + ",0)";
         });
     //Add bar to each group
+
+    let color = d3.scale.d3_salud();
     var rects = groups.append("rect")
         .attr("x", 0)
         .attr("y", function (d) {
@@ -679,7 +642,9 @@ function createBarSort(datos) {
         })
         .attr("width", xScale.rangeBand())
         .attr("height", 0)
-        .attr("fill", "SteelBlue"); // Cambia color de barra
+        .attr("fill", function (d, i) {
+            return color(i);
+        }) // Cambia color de barra
     //Add label to each group
     groups.append("text")
         .attr("x", xScale.rangeBand() / 2)
@@ -841,7 +806,6 @@ function createBarSort(datos) {
 }
 //this.createPieChart(datos);
 let firstTimeStackChart = true;
-
 function createStackChart(datos) {
     if (firstTimeStackChart) {
         showStackChart();
@@ -994,26 +958,20 @@ function createStackChart(datos) {
     });
 }
 
-
 let firstCreateCircular = true;
-
 function nextDayCircular() {
     let botonNextDayCircular = document.getElementById("nextDayCircular");
     let previousDayButtonCircular = document.getElementById("previousDayCircular");
-
     if (previousDayButtonCircular != null) {
         previousDayButtonCircular.disabled = false;
     }
-    console.log(contadorDias, "que dia es");
     if (firstCreateCircular) {
         this.createPieChart(datos, contadorDias);
         botonNextDayCircular.innerHTML = "Siguiente día";
-        console.log("primera vez", contadorDias);
         firstCreateCircular = false;
         contadorDias++;
         return;
     }
-
     if (contadorDias < datos.length) {
         this.createPieChart(datos, contadorDias);
         if (contadorDias + 1 == datos.length) {
@@ -1021,22 +979,14 @@ function nextDayCircular() {
             return
         }
     }
-
-
     contadorDias++;
-
 }
-
-let previousDayButtonCircular = document.getElementById("previousDayCircular");
-
-
 
 function previousDayCircular() {
     let previousDayButtonCircular = document.getElementById("previousDayCircular");
     let nextDayButtonCircular = document.getElementById("nextDayCircular");
     if (nextDayButtonCircular != null)
         nextDayButtonCircular.disabled = false;
-
     if (contadorDias >= 0) {
         this.createPieChart(datos, contadorDias);
         getSumaTable(contadorDias);
@@ -1044,10 +994,51 @@ function previousDayCircular() {
             previousDayButtonCircular.disabled = true;
             return;
         }
-    }
+    }   
     contadorDias--;
 }
 
+let firstCreateBarras = true;
+function nextDayBarras(){
+    let botonNextDayBarras = document.getElementById("nextDayBarras");
+    let previousDayButtonBarras = document.getElementById("previousDayBarras");
+    if (previousDayButtonBarras != null) {
+        previousDayButtonBarras.disabled = false;
+    }
+    if (firstCreateBarras) {
+        this.createBarSort(datos, contadorDias);
+        botonNextDayBarras.innerHTML = "Siguiente día";
+        firstCreateBarras = false;
+        contadorDias++;
+        return;
+    }
+    if (contadorDias < datos.length) {
+        //d3.selectAll("g > *").remove();
+        d3.select(".chartContainer").html("");
+        this.createBarSort(datos, contadorDias);
+        if (contadorDias + 1 == datos.length) {
+            botonNextDayBarras.disabled = true;
+            return
+        }
+    }
+    contadorDias++;
+}
+
+function previousDayBarras() {
+    contadorDias--;
+    let previousDayButtonBarras = document.getElementById("previousDayBarras");
+    let nextDayButtonBarras = document.getElementById("nextDayBarras");
+    if (nextDayButtonBarras != null)
+        nextDayButtonBarras.disabled = false;
+    if (contadorDias >= 0) {
+        d3.select(".chartContainer").html("");
+        this.createBarSort(datos, contadorDias);
+        if (contadorDias == 0) {
+            previousDayButtonBarras.disabled = true;
+            return;
+        }
+    }   
+}
 
 let buttonVerGrafica = document.getElementById("btnVerGrafica");
 let selectedAlready = true;
@@ -1061,13 +1052,24 @@ buttonVerGrafica.addEventListener("click", (event) => {
     // 2 - circular
     // 3 - puntos
     // 4 - sobrecargada
-    //$('#controlesDiv').empty();
     if (selectedAlready) {
         showControlsParent();
         selectedAlready = false;
+        this.inicializador();
     }
     if (radioOptionSelected == "datosVista" && dropDownValue == "barras") {
-
+        const circularDiv = document.getElementById('circularDiv');
+        const puntos = document.getElementById('puntosDiv');
+        if (circularDiv != null) {
+            circularDiv.style.display = "none";
+        }
+         if (puntos != null) {
+            puntos.style.display = "none";
+        }
+        showControlsButtonsBarras();
+        showBarSort();
+        let previousDayButtonBarras = document.getElementById("previousDayBarras");
+        previousDayButtonBarras.disabled = true;
     } else if (radioOptionSelected == "poblacionVista" && dropDownValue == "barras") {
 
     } else if (radioOptionSelected == "clasificacionVista" && dropDownValue == "barras") {
@@ -1086,10 +1088,10 @@ buttonVerGrafica.addEventListener("click", (event) => {
             barras.style.display = "none";
         }
         // this.inicializador();
-        this.inicializador();
         showControlsButtonsCircular();
         showPieChart();
-
+        let previousDayButtonCircular = document.getElementById("previousDayCircular");
+        previousDayButtonCircular.disabled = true;
 
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "puntos") {
         const barras = document.getElementById('barrasDiv');
@@ -1103,9 +1105,7 @@ buttonVerGrafica.addEventListener("click", (event) => {
         alert("Opción inválida al iniciar gráfica");
         return;
     }
-
     event.preventDefault();
-
 })
 
 function showChartPoints() {

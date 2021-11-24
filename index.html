@@ -23,7 +23,7 @@
                 <h1>COVID - Simulación</h1>
 
                 <fieldset style="margin-right:3.5em; padding-bottom:1.267em; margin-bottom:2em;">
-                    <h3><label style="margin-left:3.867em;">Datos:</label></h3>
+                    <h3><label style="margin-left:3.867em;">Datos</label></h3>
                     <p>Día: <span id="dias"></span></p>
                     <progress id="progressDias" value="0" max="100" min="0"></progress>
                     <p>Contagiados: <span id="contagiados"></span></p>
@@ -57,12 +57,12 @@
                                     <div id="barrasDiv">
                                         <h4 style="margin:0; padding:0; line-height: 0;">Gráfica selecionada:</h4>
                                         <h4 style="margin:0; padding:0; line-height: 2.5;">Barras</h4>
+                                         <button class="buttonsControles" id="nextDayBarras" value="toggle"
+                                             onclick="nextDayBarras()">Empezar
+                                             simulación (Barras)</button>
                                         <button class="buttonsControles" id="previousDayBarras"
                                             onclick="previousDayBarras()">Día
                                             anterior</button>
-                                        <button class="buttonsControles" id="nextDayBarras" value="toggle"
-                                            onclick="nextDayBarras()">Empezar
-                                            simulación (Barras)</button>
                                         <button class="buttonsControles" onclick="location.reload()">Volver a
                                             iniciar</button>
                                     </div>
