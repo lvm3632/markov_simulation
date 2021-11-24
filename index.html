@@ -22,7 +22,6 @@
             <div class="datos" style="text-align: left; margin-left:1.5em;">
                 <h1>COVID - Simulación</h1>
 
-
                 <fieldset style="margin-right:3.5em; padding-bottom:1.267em; margin-bottom:2em;">
                     <h3><label style="margin-left:3.867em;">Datos:</label></h3>
                     <p>Día: <span id="dias"></span></p>
@@ -32,23 +31,20 @@
                     <p>Recuperados: <span id="recuperados"></span></p>
                     <p>Muertos: <span id="muertos"></span></p>
                     <p>Poblacion total: <span id="poblacionTotal"></span></p>
-
-
                 </fieldset>
 
                 <fieldset style="margin-right:3.5em; padding-bottom:1.267em;">
                     <label style="margin-left:3.867em;">Controles</label>
                     <div style="margin-top:1em;">
                         <button id="previousDay" onclick="previousDay()">Día anterior</button>
-                        <button id="nextDay" value="toggle" onclick="nextDay()">Día siguiente</button>
+                        <button id="nextDay" value="toggle" onclick="nextDay()">Empezar simulación</button>
                     </div>
                     <br />
                     <div>
                         <button onclick="location.reload()">Volver a iniciar</button>
-
-                        <button id="btnAnimacion" onclick="location.reload()" value="animacion">Ver
+                        <!-- <button id="btnAnimacion" onclick="location.reload()" value="animacion">Ver
                             animación
-                        </button>
+                        </button> -->
                     </div>
                 </fieldset>
 
@@ -70,35 +66,11 @@
                         <input type="radio" id="poblacionVista" name="vista" value="poblacionVista">
                         <label for="poblacion">Población</label><br>
                         <input type="radio" id="clasificacionVista" name="vista" value="clasificacionVista">
-
                         <label for="clasificacion">Clasificación</label>
                         <br />
                         <input type="submit" value="Ver gráfica" style="margin-top:1.667em; margin-left:6em;">
                     </form>
-                </fieldset>
-
-
-                <!-- <div>
-                    <h3>Población</h3>
-                    <h4>Contagiados: </h4>
-                    <p>Con cubrebocas y vacuna: 20</p>
-                    <p>Cin cubrebocas y vacuna: 10</p>
-                    <p>Con cubrebocas y no vacuna: 5</p>
-                    <p>Sin cubrebocas y no vacuna: 2</p>
-
-                    <h4>Sanos: </h4>
-                    <p>Con cubrebocas y vacuna: 20</p>
-                    <p>Sin cubrebocas y vacuna: 10</p>
-                    <p>Con cubrebocas y no vacuna: 5</p>
-                    <p>Sin cubrebocas y no vacuna: 2</p>
-
-                    <h4>Recuperados: </h4>
-                    <p>Con cubrebocas y vacuna: 20</p>
-                    <p>Sin cubrebocas y vacuna: 10</p>
-                    <p>Con cubrebocas y no vacuna: 5</p>
-                    <p>Sin cubrebocas y no vacuna: 2</p>
-                    <h4>Muerto(s): <span>5</span></h4>
-                </div> -->
+                </fieldset>  
             </div>
         </aside>
 
@@ -147,6 +119,10 @@
                 </template>
 
             </main>
+            <!-- <template id="tableTemplate">
+
+
+            </template> -->
             <main class="boxTable" id="boxTableId" style="margin-top:2.5em;">
                 <h3>Población - Día <span id="diaPoblacion"></span></h3>
                 <table id="tableDays">
@@ -221,22 +197,26 @@
     </script>
 
 
+    <script>
+    </script>    
     <script type="text/javascript">
         $(document).ready(function () {
                 $('.dropdown').val("puntos", true);
+
 
             if ($('.dropdown').val().toString() == "puntos") {
                 $('input[type="radio"][value="datosVista"]').prop('checked', true);
                 $('input[type="radio"][value="datosVista"]').prop('disabled', false);
                 $('input[type="radio"][value="poblacionVista"]').prop('disabled', true);
                 $('input[type="radio"][value="clasificacionVista"]').prop('disabled', true);
-                $("#previousDay").prop("disabled", false);
+                $("#previousDay").prop("disabled", true);
                 $("#nextDay").prop("disabled", false);
                 $("#btnAnimacion").prop("disabled", false);
 
+                
+
             }
             $('.dropdown').change(function () {
-
                 if ($('.dropdown').val().toString() == "puntos") {
                     $('input[type="radio"][value="datosVista"]').prop('checked', true);
                     $('input[type="radio"][value="datosVista"]').prop('disabled', false);

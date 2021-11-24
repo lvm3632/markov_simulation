@@ -217,8 +217,8 @@ function nextDay() {
         console.log("entra antes?")
         ///this.createHistogram(datos);
         //this.createPieChart(datos);
-        //this.createBarSort(datos);
-        this.createStackChart(datos);
+        this.createBarSort(datos);
+        //this.createStackChart(datos);
         firstCreate = false;
         return;
     }
@@ -247,14 +247,11 @@ function nextDay() {
 //this.inicializador();
 
 let firstTimeChartPoints = true;
-
 function createHistogram(datos) {
-
     if (firstTimeChartPoints) {
         showChartPoints();
         firstTimeChartPoints = false;
     }
-
     //Width and height
     console.log(contadorDias, "dia en create en histogram");
     var w = 600;
@@ -521,6 +518,7 @@ let firstTimeBarSort = true;
 function createBarSort(datos) {
     if (firstTimeBarSort) {
         showBarSort();
+        $("#nextDay").html("Día siguiente");
         firstTimeBarSort = false;
     }
     //Sort button state
@@ -529,7 +527,7 @@ function createBarSort(datos) {
     //New, dynamic width value pulled from .chartContainer
     var w = d3.select(".chartContainer").node().clientWidth;
     //Height, padding
-    var h = 350;
+    var h = 450;
     var padding = 35;
     //Sample data
     var dataset = [{
