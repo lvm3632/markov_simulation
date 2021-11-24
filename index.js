@@ -1,4 +1,5 @@
 let datos = [];
+let datos_general = [];
 
 function getJSON(url) {
     var rawFile = new XMLHttpRequest();
@@ -9,6 +10,7 @@ function getJSON(url) {
                 var allText = rawFile.responseText;
                 //alert(allText);
                 datos = JSON.parse(allText);
+                datos_general = datos;
                 datos = datos.datos;
             }
         }
@@ -17,7 +19,7 @@ function getJSON(url) {
 }
 getJSON("test.json");
 
-let contadorDias = 0;
+let contadorDias = -1;
 let diaSpanElement = document.getElementById("dias");
 let diaProgress = document.getElementById("progressDias");
 let sanos = document.getElementById("sanos");
@@ -65,8 +67,8 @@ let diaStackChart; // span
 
 function inicializador() {
     diaProgress.value = contadorDias + 1;
-    console.log(datos.datos, " longitud ");
-    diaProgress.max = datos.length - 1;
+    //console.log(datos.datos, " longitud ");
+    diaProgress.max = datos_general.dias;
     diaPoblacion.innerText = 1;
     diaSpanElement.innerText = 1;
     sanos.innerText = datos[0]["Sanos"];
@@ -75,10 +77,10 @@ function inicializador() {
     poblacionTotalNumber = datos[0]["Contagiados"] + datos[0]["Recuperados"] + datos[0]["Sanos"] + datos[0]["Muertos"];
     poblacionTotal.innerText = poblacionTotalNumber;
     muertos.innerText = datos[0]["Muertos"];
-    if(previousDayButton != null)
-    previousDayButton.disabled = true;
+    if (previousDayButton != null)
+        previousDayButton.disabled = true;
     contadorDias = 0;
-    this.getSumaTable(0);
+    //this.getSumaTable(1);
 }
 
 
@@ -213,7 +215,7 @@ function getSumaTable(dia) {
     poblacionTotalTable.innerText = datos[dia]["Contagiados"] + datos[dia]["Recuperados"] + datos[dia]["Sanos"];
 
     let percentage = (datos[dia]["Clasificacion"] * 100).toFixed(2) + "%";
-    clasificacionValor.innerText =   percentage;
+    clasificacionValor.innerText = percentage;
 
     /*if(datos[dia]["Contagiados"] == 0){
          clasificacionValor.innerText =   "0%";
@@ -256,7 +258,7 @@ function nextDay() {
         this.inicializador();
         console.log("entra antes?")
         //this.createHistogram(datos);
-        this.createPieChart(datos);
+        //this.createPieChart(datos);
         //this.createBarSort(datos);
         //this.createStackChart(datos);
         firstCreate = false;
@@ -503,16 +505,25 @@ function createHistogram(datos) {
 
 //let firstTimePieChart = true;
 
-function createPieChart(datos) {
-
+function createPieChart(datos, dia) {
     /*if (firstTimePieChart) {
         showPieChart();
         firstTimePieChart = false;
     }*/
+    diaProgress.value = dia+1;
+    diaSpanElement.innerText = dia+1;
+    diaPoblacion.innerText = dia+1;
+    diaPieChart.innerText = dia+1;
+    sanos.innerText = datos[dia]["Sanos"];
+    contagiados.innerText = datos[dia]["Contagiados"];
+    recuperados.innerText = datos[dia]["Recuperados"];
+    muertos.innerText = datos[dia]["Muertos"];
+    getSumaTable(dia);
+
     let w = 330;
     let h = 450;
-
-    let dataset = [datos[contadorDias].Contagiados, datos[contadorDias].Sanos, datos[contadorDias].Recuperados, datos[contadorDias].Muertos];
+    console.log(dia, "contador en pieChart")
+    let dataset = [datos[dia].Contagiados, datos[dia].Sanos, datos[dia].Recuperados, datos[dia].Muertos];
 
     let outerRadius = (w / 2) - 50;
     let innerRadius = 0;
@@ -552,20 +563,20 @@ function createPieChart(datos) {
         })
         .attr("text-anchor", "middle")
         .text(function (d) {
-            
+
             i++;
 
-            if(d.value == 0)return;
-            
-            if(i == 1){
+            if (d.value == 0) return;
+
+            if (i == 1) {
                 lblEstado = d.value + " 😷";
-            }else if(i == 2){
+            } else if (i == 2) {
                 lblEstado = d.value + " 🙂";
-            }else if(i == 3){
+            } else if (i == 3) {
                 lblEstado = d.value + " 🛏️";
-            }else if(i == 4){
+            } else if (i == 4) {
                 lblEstado = d.value + " 💀";
-            }else{
+            } else {
                 lblEstado = d.value;
             }
 
@@ -985,86 +996,55 @@ function createStackChart(datos) {
 
 
 let firstCreateCircular = true;
-function nextDayCircular(){
+
+function nextDayCircular() {
     let botonNextDayCircular = document.getElementById("nextDayCircular");
     let previousDayButtonCircular = document.getElementById("previousDayCircular");
 
-        if(previousDayButtonCircular != null){
-            previousDayButtonCircular.disabled = false;          
-        }
-
-
-
+    if (previousDayButtonCircular != null) {
+        previousDayButtonCircular.disabled = false;
+    }
+    console.log(contadorDias, "que dia es");
     if (firstCreateCircular) {
-        this.inicializador();
-        //this.createHistogram(datos);
-        this.createPieChart(datos);
+        this.createPieChart(datos, contadorDias);
         botonNextDayCircular.innerHTML = "Siguiente día";
-        //this.createBarSort(datos);
-        //this.createStackChart(datos);
+        console.log("primera vez", contadorDias);
         firstCreateCircular = false;
+        contadorDias++;
         return;
     }
 
-    botonNextDayCircular.addEventListener("click", (event) => {
-        console.log(contadorDias, "contador")
-        if (contadorDias < datos.length) {
-            diaProgress.value = contadorDias;
-            diaSpanElement.innerText = contadorDias;
-            diaPoblacion.innerText = contadorDias;
-            //diaChartPoints.innerText = contadorDias;
-            diaPieChart.innerText = contadorDias;
-            sanos.innerText = datos[contadorDias]["Sanos"];
-            contagiados.innerText = datos[contadorDias]["Contagiados"];
-            recuperados.innerText = datos[contadorDias]["Recuperados"];
-            muertos.innerText = datos[contadorDias]["Muertos"];
-            //d3.select("#contadorDiasBueno").text("Día: " + (contadorDias));
-            this.createPieChart(datos);
-            getSumaTable(contadorDias);
-           //previousDayButtonCircular.disabled = false;
-           if(contadorDias+1 == datos.length){
-                botonNextDayCircular.disabled = true;
-                return
-           }
+    if (contadorDias < datos.length) {
+        this.createPieChart(datos, contadorDias);
+        if (contadorDias + 1 == datos.length) {
+            botonNextDayCircular.disabled = true;
+            return
         }
-    });
+    }
+
+
     contadorDias++;
+
 }
 
 let previousDayButtonCircular = document.getElementById("previousDayCircular");
 
 
 
-function previousDayCircular () {
+function previousDayCircular() {
     let previousDayButtonCircular = document.getElementById("previousDayCircular");
     let nextDayButtonCircular = document.getElementById("nextDayCircular");
+    if (nextDayButtonCircular != null)
+        nextDayButtonCircular.disabled = false;
 
-     if(nextDayButtonCircular != null)
-    nextDayButtonCircular.disabled = false;
-
-    previousDayButtonCircular.addEventListener("click", (event) => {
-        if (contadorDias >= 0) {
-            diaProgress.value = contadorDias;
-            diaSpanElement.innerText = contadorDias;
-            diaPoblacion.innerText = contadorDias;
-            //diaChartPoints.innerText = contadorDias;
-            diaPieChart.innerText = contadorDias;
-            sanos.innerText = datos[contadorDias]["Sanos"];
-            contagiados.innerText = datos[contadorDias]["Contagiados"];
-            recuperados.innerText = datos[contadorDias]["Recuperados"];
-            muertos.innerText = datos[contadorDias]["Muertos"];
-            this.createPieChart(datos);
-            getSumaTable(contadorDias);
-            //d3.select("#contadorDiasBueno").text("Día: " + contadorDias);
-            //previousDayButtonCircular.disabled = false;
-
-            if(contadorDias-1 == 0){
-                previousDayButtonCircular.disabled = true;
-            }
-        } else {
-            //previousDayButtonCircular.disabled = true;
+    if (contadorDias >= 0) {
+        this.createPieChart(datos, contadorDias);
+        getSumaTable(contadorDias);
+        if (contadorDias == 0) {
+            previousDayButtonCircular.disabled = true;
+            return;
         }
-    });
+    }
     contadorDias--;
 }
 
@@ -1105,6 +1085,8 @@ buttonVerGrafica.addEventListener("click", (event) => {
         if (barras != null) {
             barras.style.display = "none";
         }
+        // this.inicializador();
+        this.inicializador();
         showControlsButtonsCircular();
         showPieChart();
 
