@@ -9,6 +9,7 @@ function getJSON(url) {
                 var allText = rawFile.responseText;
                 //alert(allText);
                 datos = JSON.parse(allText);
+                datos = datos.datos;
             }
         }
     }
@@ -64,6 +65,7 @@ let diaStackChart; // span
 
 function inicializador() {
     diaProgress.value = contadorDias + 1;
+    console.log(datos.datos, " longitud ");
     diaProgress.max = datos.length - 1;
     diaPoblacion.innerText = 1;
     diaSpanElement.innerText = 1;
