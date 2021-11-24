@@ -355,7 +355,7 @@ function createHistogram(datos, dia) {
         .attr("cy", function (d) {
             return yScale(d[1]);
         })
-        .attr("r", 5)
+        .attr("r", 2.5)
         .attr("fill", function (d, i) {
             console.log(d, "color");
             console.log(d[2], "en fill");
@@ -370,20 +370,17 @@ function createHistogram(datos, dia) {
             }
             return color(i);
         })
-
     //Create X axis
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + (h - padding + 5) + ")")
         .call(xAxis);
-
     svg.append("text") // text label for the x axis
         .attr("x", 265)
         .attr("y", 290)
         .style("text-anchor", "middle")
         .attr("id", "contadorDiasBueno")
     //.text("Día: 1");
-
     /*svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 10)
@@ -391,13 +388,11 @@ function createHistogram(datos, dia) {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Value");*/
-
     //Create Y axis
     svg.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(" + (padding - 5) + ",0)")
         .call(yAxis);
-
     //On click, update with new data		
     let prevData = [];
 
@@ -677,7 +672,9 @@ function createBarSort(datos, dia) {
             return "translate(" + xScale(i) + ",0)";
         });
     //Add bar to each group
-
+    let bottonSort = document.getElementById("sort");
+    bottonSort.disabled = false;
+    
     let color = d3.scale.d3_salud();
     var rects = groups.append("rect")
         .attr("x", 0)
@@ -799,7 +796,6 @@ function createBarSort(datos, dia) {
     //Sorting logic
     d3.select("#sort")
         .on("click", function () {
-
             //Need to reselect all groups in each chart
             d3.selectAll("#salesChart g.bar").sort(function (a, b) {
                     if (sortByNameOrValue) {
@@ -836,11 +832,14 @@ function createBarSort(datos, dia) {
             //Update text in button
             d3.select(this)
                 .text(function () {
-                    if (sortByNameOrValue) {
+                    // if (sortByNameOrValue) {
+                    // } else {
+                    //     return "Estado inicial";
+                    // }
+
+                        bottonSort.disabled = true;
                         return "Ordenar de menor a mayor";
-                    } else {
-                        return "Estado inicial";
-                    }
+
                 })
 
             //Flip value of boolean
@@ -1092,6 +1091,9 @@ function previousDayBarras() {
 let buttonVerGrafica = document.getElementById("btnVerGrafica");
 let selectedAlready = true;
 buttonVerGrafica.addEventListener("click", (event) => {
+
+    let tipoGraficaDiv = document.getElementById("tipoGraficaDiv");
+    tipoGraficaDiv.style.display = "none";
     let radioOptionSelected = $('input[type="radio"][name="vista"]:checked').val().toString();
     // 1 - datosVista
     // 2 - poblacionVista
@@ -1112,17 +1114,14 @@ buttonVerGrafica.addEventListener("click", (event) => {
         if (pieChart != null) {
             pieChart.remove();
         }
-
         const circularDiv = document.getElementById('circularDiv');
         const puntos = document.getElementById('puntosDiv');
-
         if (circularDiv != null) {
             circularDiv.style.display = "none";
         }
         if (puntos != null) {
             puntos.style.display = "none";
         }
-
         showControlsButtonsBarras();
         showBarSort();
         let buttonNextBarras = document.getElementById("nextDayBarras");
@@ -1161,7 +1160,6 @@ buttonVerGrafica.addEventListener("click", (event) => {
         buttonNextCircular.innerHTML = "Día siguiente";
 
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "puntos") {
-
         const barras = document.getElementById('barrasDiv');
         const circular = document.getElementById('circularDiv');
         d3.select(".containerBarSort").html("");

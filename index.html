@@ -45,7 +45,7 @@
                                          <button class="buttonsControles" id="nextDay" value="toggle"
                                              onclick="nextDay()">Empezar
                                              simulación (Puntos)</button>
-                                        <button disabled class="buttonsControles" id="previousDay" onclick="previousDay()">Día
+                                        <button style="display:none;" disabled class="buttonsControles" id="previousDay" onclick="previousDay()">Día
                                             anterior</button>
                                         <button class="buttonsControles" onclick="location.reload()">Volver a
                                             iniciar</button>
@@ -93,29 +93,32 @@
                 </div>
 
 
-                <fieldset style="margin-top:2em; margin-right:3.5em; padding-bottom:1.267em;">
-                    <p>Tipos de gráficas:</p>
-                    <label for="lblGraficas">Gráficas</label>
-                    <select name="graficas" id="graficas" class="dropdown">
-                        <option value="circular">Circular</option>
-                        <option value="barras">Barras</option>
-                        <option value="puntos">Puntos</option>
-                        <option value="sobrecargada">Sobrecargada</option>
-                        <!-- <option value="mapa">Mapa</option> -->
-                    </select>
-                    <form>
-                        <p>Selecciona los datos a visualizar:</p>
-                        <input type="radio" checked id="datosVista" name="vista" value="datosVista">
-                        <label for="datos">Datos</label><br>
-                        <input type="radio" id="poblacionVista" name="vista" value="poblacionVista">
+                <div id="tipoGraficaDiv">
+                    <fieldset style="margin-top:2em; margin-right:3.5em; padding-bottom:1.267em;">
+                        <p>Tipos de gráficas:</p>
+                        <label for="lblGraficas">Gráficas</label>
+                        <select name="graficas" id="graficas" class="dropdown">
+                            <option value="circular">Circular</option>
+                            <option value="barras">Barras</option>
+                            <option value="puntos">Puntos</option>
+                            <!-- <option value="sobrecargada">Sobrecargada</option> -->
+                            <!-- <option value="mapa">Mapa</option> -->
+                        </select>
+                        <form>
+                            <p>Selecciona los datos a visualizar:</p>
+                            <input type="radio" checked id="datosVista" name="vista" value="datosVista">
+                            <label for="datos">Datos</label><br>
+                            <!-- <input type="radio" id="poblacionVista" name="vista" value="poblacionVista">
                         <label for="poblacion">Población</label><br>
                         <input type="radio" id="clasificacionVista" name="vista" value="clasificacionVista">
-                        <label for="clasificacion">Clasificación</label>
-                        <br />
-                        <button id="btnVerGrafica" style="margin-top:1.667em; margin-left:6em;" value="Ver gráfica">Ver
-                            gráfica</button>
-                    </form>
-                </fieldset>
+                        <label for="clasificacion">Clasificación</label> -->
+                            <br />
+                            <button id="btnVerGrafica" style="margin-top:1.667em; margin-left:6em;"
+                                value="Ver gráfica">Ver
+                                gráfica</button>
+                        </form>
+                    </fieldset>
+                </div>
             </div>
         </aside>
 
@@ -172,8 +175,8 @@
             </template> -->
             <main class="boxTable" id="boxTableId" style="margin-top:2.5em;">
                   <p id="clasificacionIndice"
-                      style="width:100%; max-width:90%;margin-left:5.667em; margin-top:1em; font-weight:700;">Probabilidad de contagio:
-                      <span id="clasificacionValor" style="font-weight:400;">0.0</span></p>
+                      style="width:100%; max-width:90%;margin-left:6.667em; margin-top:1em; font-weight:700;">Tasa de afectados:
+                      <span id="clasificacionValor" style="font-weight:400; text-decoration: underline;">0.0</span></p>
                 <h3>Población - Día <span id="diaPoblacion"></span></h3>
 
                 <table id="tableDays">
@@ -220,7 +223,7 @@
                             <td id="totalSin">0</td>
                             <td id="totalVac">0</td>
                             <td id="totalNoVac">0</td>
-                            <td id="poblacionTotalTable">0</td>
+                            <td id="poblacionTotalTable" style="background:rgb(214, 210, 210);">0</td>
                         </tr>
                     </tbody>
                 </table>
