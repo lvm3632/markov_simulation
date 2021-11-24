@@ -35,7 +35,7 @@ body {
     margin-left: 4vw;
     margin-top: 5.5vh;
     margin-right: 4vw;
-    padding-bottom: 8em;
+    padding-bottom: 1em;
 }
 
 .boxTable {
@@ -208,10 +208,30 @@ g.bar text {
     fill: yellow;
 }
 
-#boxStackChart 
-.axis path,
+#boxStackChart .axis path,
 .axis line {
     fill: none;
     stroke: black;
     shape-rendering: crispEdges;
+}
+
+.buttonsControles {
+    display: grid;
+    margin: 0 auto;
+    margin-bottom: 2.5em;
+    padding: 0.4em;
+}
+
+.box .pieChartDiv {
+    width: 100%;
+    display: grid;
+    place-items: center;
+    
+}
+
+.box .pieChartSVG {
+    height: 50vh;
+    border-bottom: 1px solid black;
+    width: 100%;
+    padding-bottom: 0;
 }

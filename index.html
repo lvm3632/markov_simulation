@@ -33,29 +33,73 @@
                     <p>Poblacion total: <span id="poblacionTotal"></span></p>
                 </fieldset>
 
-                <fieldset style="margin-right:3.5em; padding-bottom:1.267em;">
-                    <label style="margin-left:3.867em;">Controles</label>
-                    <div style="margin-top:1em;">
-                        <button id="previousDay" onclick="previousDay()">Día anterior</button>
-                        <button id="nextDay" value="toggle" onclick="nextDay()">Empezar simulación</button>
-                    </div>
-                    <br />
-                    <div>
-                        <button onclick="location.reload()">Volver a iniciar</button>
-                        <!-- <button id="btnAnimacion" onclick="location.reload()" value="animacion">Ver
+                <div id="controlesDiv">
+                    <template id="controlesGeneralTemplate">
+                        <fieldset id="fieldSet" style="margin-right:3.5em; padding-bottom:1.267em;">
+                            <label style="margin-left:3.867em;">Controles</label>
+                            <div id="controles" style="margin-top:1em;">
+                                <template id="controlsPuntosTemplate">
+                                    <div id="puntosDiv">
+                                        <h4 style="margin:0; padding:0; line-height: 0;">Gráfica selecionada:</h4>
+                                        <h4 style="margin:0; padding:0; line-height: 2.5;">Puntos</h4>
+                                        <button class="buttonsControles" id="previousDay" onclick="previousDay()">Día
+                                            anterior</button>
+                                        <button class="buttonsControles" id="nextDay" value="toggle"
+                                            onclick="nextDay()">Empezar
+                                            simulación (Puntos)</button>
+                                        <button class="buttonsControles" onclick="location.reload()">Volver a
+                                            iniciar</button>
+                                    </div>
+                                </template>
+
+                                <!-- TODO: Template Controls Barra -->
+                                <template id="controlsBarrasTemplate">
+                                    <div id="barrasDiv">
+                                        <h4 style="margin:0; padding:0; line-height: 0;">Gráfica selecionada:</h4>
+                                        <h4 style="margin:0; padding:0; line-height: 2.5;">Barras</h4>
+                                        <button class="buttonsControles" id="previousDayBarras"
+                                            onclick="previousDayBarras()">Día
+                                            anterior</button>
+                                        <button class="buttonsControles" id="nextDayBarras" value="toggle"
+                                            onclick="nextDayBarras()">Empezar
+                                            simulación (Barras)</button>
+                                        <button class="buttonsControles" onclick="location.reload()">Volver a
+                                            iniciar</button>
+                                    </div>
+                                </template>
+                                <!-- TODO: Template Controls Circular -->
+                                <template id="controlsCircularTemplate">
+                                    <div id="circularDiv">
+                                        <h4 style="margin:0; padding:0; line-height: 0;">Gráfica selecionada:</h4>
+                                        <h4 style="margin:0; padding:0; line-height: 2.5;">Circular</h4>
+                                        <button class="buttonsControles" id="nextDayCircular" value="toggle"
+                                            onclick="nextDayCircular()">Iniciar (Circular)</button>
+                                        <button class="buttonsControles" id="previousDayCircular"
+                                            onclick="previousDayCircular()">Día
+                                            anterior</button>
+                                        <button class="buttonsControles" onclick="location.reload()">Volver a
+                                            iniciar</button>
+                                    </div>
+                                </template>
+                            </div>
+                            <br />
+                            <div>
+                                <!-- <button id="btnAnimacion" onclick="location.reload()" value="animacion">Ver
                             animación
                         </button> -->
-                    </div>
-                </fieldset>
+                            </div>
+                        </fieldset>
+                    </template>
+                </div>
+
 
                 <fieldset style="margin-top:2em; margin-right:3.5em; padding-bottom:1.267em;">
                     <p>Tipos de gráficas:</p>
                     <label for="lblGraficas">Gráficas</label>
-
                     <select name="graficas" id="graficas" class="dropdown">
-                        <option value="puntos">Puntos</option>
-                        <option value="barras">Barras</option>
                         <option value="circular">Circular</option>
+                        <option value="barras">Barras</option>
+                        <option value="puntos">Puntos</option>
                         <option value="sobrecargada">Sobrecargada</option>
                         <!-- <option value="mapa">Mapa</option> -->
                     </select>
@@ -68,9 +112,10 @@
                         <input type="radio" id="clasificacionVista" name="vista" value="clasificacionVista">
                         <label for="clasificacion">Clasificación</label>
                         <br />
-                        <input type="submit" value="Ver gráfica" style="margin-top:1.667em; margin-left:6em;">
+                        <button id="btnVerGrafica" style="margin-top:1.667em; margin-left:6em;" value="Ver gráfica">Ver
+                            gráfica</button>
                     </form>
-                </fieldset>  
+                </fieldset>
             </div>
         </aside>
 
@@ -91,11 +136,14 @@
                 </template>
 
                 <template id="templatePieChart">
-                    <h2 class="titleCharts">Pie Chart</h2>
-                    <h2 class="diaTitle">Día: <span id="diaPieChart">1</span></h2>
-                    <svg style="height:50vh;" id="pieChart" class="pieChart" viewBox="0 0 250 250"
-                        perserveAspectRatio="xMinYMid">
-                    </svg>
+                    <div class="pieChartDiv">
+                        <h2 class="titleCharts">Pie Chart</h2>
+                        <h2 class="diaTitle" style="margin-bottom:1em;">Día: <span id="diaPieChart">1</span></h2>
+                        <svg class="pieChartSVG"
+                            id="pieChart" class="pieChart" viewBox="0 0 250 250" perserveAspectRatio="xMinYMid">
+                        </svg>
+                        <p>🙂 Sano 😷 Contagiado 🛏️ Recuperado 💀 Muerto</p>
+                    </div>
                 </template>
 
                 <template id="templateBarSort" class="colorTemplateBarSort">
@@ -104,7 +152,6 @@
                         <h2 class="diaTitle">Día: <span id="diaBarSort">1</span></h2>
                         <div class="chartContainer" id="salesChartContainer">
                             <h2>Población</h2>
-
                         </div>
                         <div id="buttonContainer">
                             <button id="sort">Ordenar de menor a mayor</button>
@@ -124,7 +171,11 @@
 
             </template> -->
             <main class="boxTable" id="boxTableId" style="margin-top:2.5em;">
+                  <p id="clasificacionIndice"
+                      style="width:100%; margin-left:12.667em; margin-top:1em; font-weight:700;">Probabilidad de contagio:
+                      <span id="clasificacionValor" style="font-weight:400;">0.0</span></p>
                 <h3>Población - Día <span id="diaPoblacion"></span></h3>
+
                 <table id="tableDays">
                     <tbody>
                         <thead>
@@ -134,6 +185,7 @@
                                 <th>Sin cubrebocas 😠</th>
                                 <th>Vacunado 💉</th>
                                 <th>Sin vacuna 🏥🚫</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tr>
@@ -142,6 +194,8 @@
                             <td id="contagiadoConNoVac">0</td>
                             <td id="contagiadoSinVac">0</td>
                             <td id="contagiadoSinNoVac">0</td>
+                            <td id="contagiadoTotal">0</td>
+
                         </tr>
                         <tr>
                             <td class="states">Sanos</td>
@@ -149,6 +203,8 @@
                             <td id="sanoConNoVac">0</td>
                             <td id="sanoSinVac">0</td>
                             <td id="sanoSinNoVac">0</td>
+                            <td id="sanoTotal">0</td>
+
                         </tr>
                         <tr>
                             <td class="states">Recuperados</td>
@@ -156,6 +212,7 @@
                             <td id="recuperadoConNoVac">0</td>
                             <td id="recuperadoSinVac">0</td>
                             <td id="recuperadoSinNoVac">0</td>
+                            <td id="recuperadoTotal">0</td>
                         </tr>
                         <tr>
                             <td class="states">Total</td>
@@ -163,10 +220,12 @@
                             <td id="totalSin">0</td>
                             <td id="totalVac">0</td>
                             <td id="totalNoVac">0</td>
+                            <td id="poblacionTotalTable">0</td>
                         </tr>
                     </tbody>
                 </table>
                 <p style="margin-top:1.2em;" id="muertosValor1">Muertos: <span id="muertosValor">0</span></p>
+             
             </main>
         </div>
     </div>
@@ -198,12 +257,10 @@
 
 
     <script>
-    </script>    
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
-                $('.dropdown').val("puntos", true);
-
-
+            $('.dropdown').val("circular", true);
             if ($('.dropdown').val().toString() == "puntos") {
                 $('input[type="radio"][value="datosVista"]').prop('checked', true);
                 $('input[type="radio"][value="datosVista"]').prop('disabled', false);
@@ -212,9 +269,32 @@
                 $("#previousDay").prop("disabled", true);
                 $("#nextDay").prop("disabled", false);
                 $("#btnAnimacion").prop("disabled", false);
+            } else if ($('.dropdown').val().toString() == "barras") {
+                $('input[type="radio"][value="datosVista"]').prop('disabled', false);
+                $('input[type="radio"][value="poblacionVista"]').prop('disabled', false);
+                $('input[type="radio"][value="clasificacionVista"]').prop('disabled', false);
+                $("#previousDay").prop("disabled", false);
+                $("#nextDay").prop("disabled", false);
+                $("#btnAnimacion").prop("disabled", true);
 
-                
+            } else if ($('.dropdown').val().toString() == "circular") {
+                $('input[type="radio"][value="datosVista"]').prop('checked', true);
+                $('input[type="radio"][value="datosVista"]').prop('disabled', false);
+                $('input[type="radio"][value="poblacionVista"]').prop('disabled', true);
+                $('input[type="radio"][value="clasificacionVista"]').prop('disabled', true);
+                $("#previousDay").prop("disabled", false);
+                $("#nextDay").prop("disabled", false);
+                $("#btnAnimacion").prop("disabled", true);
 
+            } else if ($('.dropdown').val().toString() == "sobrecargada") {
+                $('input[type="radio"][value="datosVista"]').prop('checked', true);
+                $('input[type="radio"][value="datosVista"]').prop('disabled', false);
+                $('input[type="radio"][value="poblacionVista"]').prop('disabled', true);
+                $('input[type="radio"][value="clasificacionVista"]').prop('disabled', true);
+
+                $("#previousDay").prop("disabled", true);
+                $("#nextDay").prop("disabled", true);
+                $("#btnAnimacion").prop("disabled", true);
             }
             $('.dropdown').change(function () {
                 if ($('.dropdown').val().toString() == "puntos") {
