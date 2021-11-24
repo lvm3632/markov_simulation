@@ -965,9 +965,10 @@ function nextDayCircular() {
     if (previousDayButtonCircular != null) {
         previousDayButtonCircular.disabled = false;
     }
+        botonNextDayCircular.innerHTML = "Siguiente día";
+
     if (firstCreateCircular) {
         this.createPieChart(datos, contadorDias);
-        botonNextDayCircular.innerHTML = "Siguiente día";
         firstCreateCircular = false;
         contadorDias++;
         return;
@@ -1002,12 +1003,13 @@ let firstCreateBarras = true;
 function nextDayBarras(){
     let botonNextDayBarras = document.getElementById("nextDayBarras");
     let previousDayButtonBarras = document.getElementById("previousDayBarras");
+    botonNextDayBarras.innerHTML = "Siguiente día";
+
     if (previousDayButtonBarras != null) {
         previousDayButtonBarras.disabled = false;
     }
     if (firstCreateBarras) {
         this.createBarSort(datos, contadorDias);
-        botonNextDayBarras.innerHTML = "Siguiente día";
         firstCreateBarras = false;
         contadorDias++;
         return;
@@ -1058,18 +1060,29 @@ buttonVerGrafica.addEventListener("click", (event) => {
         this.inicializador();
     }
     if (radioOptionSelected == "datosVista" && dropDownValue == "barras") {
+        d3.select(".pieChartDiv").html("");
+        let pieChart = document.getElementById("pieChartDiv");
+        if(pieChart != null){
+            pieChart.remove();
+        }
+
         const circularDiv = document.getElementById('circularDiv');
         const puntos = document.getElementById('puntosDiv');
+
         if (circularDiv != null) {
             circularDiv.style.display = "none";
         }
          if (puntos != null) {
             puntos.style.display = "none";
         }
+
         showControlsButtonsBarras();
         showBarSort();
+        let buttonNextBarras = document.getElementById("nextDayBarras");
         let previousDayButtonBarras = document.getElementById("previousDayBarras");
         previousDayButtonBarras.disabled = true;
+        buttonNextBarras.innerHTML = "Día siguiente";
+
     } else if (radioOptionSelected == "poblacionVista" && dropDownValue == "barras") {
 
     } else if (radioOptionSelected == "clasificacionVista" && dropDownValue == "barras") {
@@ -1079,6 +1092,11 @@ buttonVerGrafica.addEventListener("click", (event) => {
         }
         showControlsButtonsBarras();
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "circular") {
+         d3.select(".containerBarSort").html("");
+        let barSortDiv = document.getElementById("containerBarSort");
+        if(barSortDiv != null){
+            barSortDiv.remove();
+        }
         const puntos = document.getElementById('puntosDiv');
         const barras = document.getElementById('barrasDiv');
         if (puntos != null) {
@@ -1090,9 +1108,10 @@ buttonVerGrafica.addEventListener("click", (event) => {
         // this.inicializador();
         showControlsButtonsCircular();
         showPieChart();
+        let buttonNextCircular = document.getElementById("nextDayCircular");
         let previousDayButtonCircular = document.getElementById("previousDayCircular");
         previousDayButtonCircular.disabled = true;
-
+        buttonNextCircular.innerHTML = "Día siguiente";
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "puntos") {
         const barras = document.getElementById('barrasDiv');
         if (barras != null) {
@@ -1116,7 +1135,6 @@ function showChartPoints() {
     diaChartPoints = document.getElementById("diaChartPoints"); // span
 }
 
-
 function showPieChart() {
     const template = document.getElementById('templatePieChart');
     const content = template.content.cloneNode(true);
@@ -1124,7 +1142,6 @@ function showPieChart() {
     box.append(content);
     diaPieChart = document.getElementById("diaPieChart"); // span
 }
-
 
 function showBarSort() {
     const template = document.getElementById('templateBarSort');
