@@ -42,11 +42,11 @@
                                     <div id="puntosDiv">
                                         <h4 style="margin:0; padding:0; line-height: 0;">Gráfica selecionada:</h4>
                                         <h4 style="margin:0; padding:0; line-height: 2.5;">Puntos</h4>
-                                        <button class="buttonsControles" id="previousDay" onclick="previousDay()">Día
+                                         <button class="buttonsControles" id="nextDay" value="toggle"
+                                             onclick="nextDay()">Empezar
+                                             simulación (Puntos)</button>
+                                        <button disabled class="buttonsControles" id="previousDay" onclick="previousDay()">Día
                                             anterior</button>
-                                        <button class="buttonsControles" id="nextDay" value="toggle"
-                                            onclick="nextDay()">Empezar
-                                            simulación (Puntos)</button>
                                         <button class="buttonsControles" onclick="location.reload()">Volver a
                                             iniciar</button>
                                     </div>
@@ -132,7 +132,7 @@
                     <h2 class="diaTitle">Día: <span id="diaChartPoints">1</span></h2>
                     <svg id="chartPoints" class="chartPointsBox" viewBox="0 15 620 300" perserveAspectRatio="xMinYMid">
                     </svg>
-                    <p class="infoChartPoints">🔴 Contagiado 🔵 Recuperado 🟢 Sano ⚫ Muerto</p>
+                    <p style="margin-top:5em;" class="infoChartPoints">🟢 Sano 🟡 Contagiado 🔵 Recuperado 🔴 Muerto</p>
                 </template>
 
                 <template id="templatePieChart">

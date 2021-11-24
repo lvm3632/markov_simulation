@@ -228,70 +228,47 @@ function getSumaTable(dia) {
 }
 
 
-
-function previousDay() {
-    previousDayButton.addEventListener("click", (event) => {
-        if (contadorDias >= 0) {
-            diaProgress.value = contadorDias;
-            diaSpanElement.innerText = contadorDias;
-            diaPoblacion.innerText = contadorDias;
-            diaChartPoints.innerText = contadorDias;
-            sanos.innerText = datos[contadorDias]["Sanos"];
-            contagiados.innerText = datos[contadorDias]["Contagiados"];
-            recuperados.innerText = datos[contadorDias]["Recuperados"];
-            muertos.innerText = datos[contadorDias]["Muertos"];
-            getSumaTable(contadorDias);
-            //d3.select("#contadorDiasBueno").text("Día: " + contadorDias);
-            //botonNextDay.disabled = false;
-        } else {
-            //previousDayButton.disabled = true;
-        }
-    });
-    contadorDias--;
-}
-
 let firstCreate = true;
+
 function nextDay() {
+    let botonNextDayPoints = document.getElementById("nextDay");
+    let previousDayButtonPoints = document.getElementById("previousDay");
+
+    if (previousDayButtonPoints != null) {
+        previousDayButtonPoints.disabled = true;
+    }
+    botonNextDayPoints.innerHTML = "Siguiente día";
+
     if (firstCreate) {
-        this.inicializador();
-        console.log("entra antes?")
-        //this.createHistogram(datos);
-        //this.createPieChart(datos);
-        //this.createBarSort(datos);
-        //this.createStackChart(datos);
+        this.createHistogram(datos, contadorDias);
         firstCreate = false;
         return;
     }
-
-    botonNextDay.addEventListener("click", (event) => {
-        console.log(contadorDias, "contador")
-        if (contadorDias < datos.length) {
-            diaProgress.value = contadorDias;
-            diaSpanElement.innerText = contadorDias;
-            diaPoblacion.innerText = contadorDias;
-            //diaChartPoints.innerText = contadorDias;
-            //diaPieChart.innerText = contadorDias;
-            sanos.innerText = datos[contadorDias]["Sanos"];
-            contagiados.innerText = datos[contadorDias]["Contagiados"];
-            recuperados.innerText = datos[contadorDias]["Recuperados"];
-            muertos.innerText = datos[contadorDias]["Muertos"];
-            //d3.select("#contadorDiasBueno").text("Día: " + (contadorDias));
-            getSumaTable(contadorDias);
-            previousDayButton.disabled = false;
-        } else {
-            botonNextDay.disabled = true;
+    if (contadorDias < datos.length) {
+        if (contadorDias + 1 == datos.length) {
+            botonNextDayPoints.disabled = true;
+            return
         }
-    });
+    }
     contadorDias++;
+}
+
+function previousDay() {
+
 }
 
 let firstTimeChartPoints = true;
 
-function createHistogram(datos) {
-    if (firstTimeChartPoints) {
-        showChartPoints();
-        firstTimeChartPoints = false;
-    }
+function createHistogram(datos, dia) {
+    diaProgress.value = dia + 1;
+    diaSpanElement.innerText = dia + 1;
+    diaPoblacion.innerText = dia + 1;
+    diaChartPoints.innerText = dia + 1;
+    sanos.innerText = datos[dia]["Sanos"];
+    contagiados.innerText = datos[dia]["Contagiados"];
+    recuperados.innerText = datos[dia]["Recuperados"];
+    muertos.innerText = datos[dia]["Muertos"];
+    getSumaTable(dia);
     //Width and height
     console.log(contadorDias, "dia en create en histogram");
     var w = 600;
@@ -301,13 +278,36 @@ function createHistogram(datos) {
     var dataset = []; //Initialize empty array
     var numDataPoints = poblacionTotalNumber; //Number of dummy data points to create
 
+    console.log(datos, "data");
     var maxRange = Math.random() * 1000; //Max range of new values
 
-    for (var i = 0; i < numDataPoints; i++) { //Loop numDataPoints times
-        var newNumber1 = Math.floor(Math.random() * maxRange); //New random integer
-        var newNumber2 = Math.floor(Math.random() * maxRange); //New random integer
-        dataset.push([newNumber1, newNumber2]); //Add new number to array
+
+    for (let i = 0; i < datos[0].Contagiados; i++) {
+        let newNumber1 = Math.floor(Math.random() * maxRange);
+        let newNumber2 = Math.floor(Math.random() * maxRange);
+        dataset.push([newNumber1, newNumber2, "contagiado"]);
     }
+
+    for (let i = 0; i < datos[0].Sanos; i++) {
+        let newNumber1 = Math.floor(Math.random() * maxRange);
+        let newNumber2 = Math.floor(Math.random() * maxRange);
+        dataset.push([newNumber1, newNumber2, "sano"]);
+    }
+
+    for (let i = 0; i < datos[0].Recuperados; i++) {
+        let newNumber1 = Math.floor(Math.random() * maxRange);
+        let newNumber2 = Math.floor(Math.random() * maxRange);
+        dataset.push([newNumber1, newNumber2, "recuperado"]);
+    }
+
+    for (let i = 0; i < datos[0].Muertos; i++) {
+        let newNumber1 = Math.floor(Math.random() * maxRange);
+        let newNumber2 = Math.floor(Math.random() * maxRange);
+        dataset.push([newNumber1, newNumber2, "muerto"]);
+    }
+
+
+    console.log(dataset, "despues for");
     //Create scale functions
     var xScale = d3.scale.linear()
         .domain([0, d3.max(dataset, function (d) {
@@ -339,8 +339,9 @@ function createHistogram(datos) {
         .attr("width", w)
         .attr("height", h);
 
-    var color = d3.scale.category20();
+    var color = d3.scale.d3_salud();
     //Create circles
+    console.log(dataset, "dataset")
     svg.append("g")
         .attr("id", "circles")
         //.attr("fill", "red")
@@ -356,7 +357,17 @@ function createHistogram(datos) {
         })
         .attr("r", 5)
         .attr("fill", function (d, i) {
-            //console.log("valor d: " + d, "valor i: " + i);
+            console.log(d, "color");
+            console.log(d[2], "en fill");
+            if (d[2] == "sano") {
+                return color(1); // Verde
+            } else if (d[2] == "contagiado") {
+                return color(0); // Amarillo
+            } else if (d[2] == "recuperado") {
+                return color(2); // Azul
+            } else if (d[2] == "muerto") {
+                return color(3); // Azul
+            }
             return color(i);
         })
 
@@ -392,16 +403,42 @@ function createHistogram(datos) {
 
     d3.select("#nextDay")
         .on("click", function () {
-            console.log(contadorDias, "dia en create");
+            diaProgress.value = contadorDias + 1;
+            diaSpanElement.innerText = contadorDias + 1;
+            diaPoblacion.innerText = contadorDias + 1;
+            diaChartPoints.innerText = contadorDias + 1;
+            sanos.innerText = datos[contadorDias]["Sanos"];
+            contagiados.innerText = datos[contadorDias]["Contagiados"];
+            recuperados.innerText = datos[contadorDias]["Recuperados"];
+            muertos.innerText = datos[contadorDias]["Muertos"];
+            getSumaTable(contadorDias);
             //d3.select("#contadorDiasBueno").text("hola");
             //New values for dataset
             var maxRange = Math.random() * 1000; //Max range of new values
             dataset = []; //Initialize empty array
-            for (var i = 0; i < numDataPoints; i++) { //Loop numValues times
-                var newNumber1 = Math.floor(Math.random() * maxRange); //New random integer
-                var newNumber2 = Math.floor(Math.random() * maxRange); //New random integer
-                dataset.push([newNumber1, newNumber2]); //Add new number to array
-                prevData.push([newNumber1, newNumber2]);
+
+            for (let i = 0; i < datos[contadorDias].Contagiados; i++) {
+                let newNumber1 = Math.floor(Math.random() * maxRange);
+                let newNumber2 = Math.floor(Math.random() * maxRange);
+                dataset.push([newNumber1, newNumber2, "contagiado"]);
+            }
+
+            for (let i = 0; i < datos[contadorDias].Sanos; i++) {
+                let newNumber1 = Math.floor(Math.random() * maxRange);
+                let newNumber2 = Math.floor(Math.random() * maxRange);
+                dataset.push([newNumber1, newNumber2, "sano"]);
+            }
+
+            for (let i = 0; i < datos[contadorDias].Recuperados; i++) {
+                let newNumber1 = Math.floor(Math.random() * maxRange);
+                let newNumber2 = Math.floor(Math.random() * maxRange);
+                dataset.push([newNumber1, newNumber2, "recuperado"]);
+            }
+
+            for (let i = 0; i < datos[contadorDias].Muertos; i++) {
+                let newNumber1 = Math.floor(Math.random() * maxRange);
+                let newNumber2 = Math.floor(Math.random() * maxRange);
+                dataset.push([newNumber1, newNumber2, "muerto"]);
             }
             //Update scale domains
             xScale.domain([0, d3.max(dataset, function (d) {
@@ -423,20 +460,30 @@ function createHistogram(datos) {
                 })
                 .attr("cy", function (d) {
                     return yScale(d[1]);
-                });
+                }).attr("fill", function (d, i) {
+                    console.log(d, "color");
+                    console.log(d[2], "en fill");
+                    if (d[2] == "sano") {
+                        return color(1); // Verde
+                    } else if (d[2] == "contagiado") {
+                        return color(0); // Amarillo
+                    } else if (d[2] == "recuperado") {
+                        return color(2); // Azul
+                    } else if (d[2] == "muerto") {
+                        return color(3); // Azul
+                    }
+                    return color(i);
+                })
             //Update X axis
             svg.select(".x.axis")
                 .transition()
                 .duration(1500)
-                .delay(500)
                 .call(xAxis);
             //Update Y axis
             svg.select(".y.axis")
                 .transition()
                 .duration(1500)
-                .delay(500)
                 .call(yAxis);
-
         });
     //On click, update with new data	
     d3.select("#previousDay")
@@ -474,24 +521,21 @@ function createHistogram(datos) {
             svg.select(".x.axis")
                 .transition()
                 .duration(1500)
-                .delay(500)
                 .call(xAxis);
             //Update Y axis
             svg.select(".y.axis")
                 .transition()
                 .duration(1500)
-                .delay(500)
                 .call(yAxis);
         });
     // Append svg parent
 }
 
-
 function createPieChart(datos, dia) {
-    diaProgress.value = dia+1;
-    diaSpanElement.innerText = dia+1;
-    diaPoblacion.innerText = dia+1;
-    diaPieChart.innerText = dia+1;
+    diaProgress.value = dia + 1;
+    diaSpanElement.innerText = dia + 1;
+    diaPoblacion.innerText = dia + 1;
+    diaPieChart.innerText = dia + 1;
     sanos.innerText = datos[dia]["Sanos"];
     contagiados.innerText = datos[dia]["Contagiados"];
     recuperados.innerText = datos[dia]["Recuperados"];
@@ -554,10 +598,10 @@ function createPieChart(datos, dia) {
 }
 
 function createBarSort(datos, dia) {
-    diaProgress.value = dia+1;
-    diaSpanElement.innerText = dia+1;
-    diaPoblacion.innerText = dia+1;
-    diaBarSort.innerText = dia+1;
+    diaProgress.value = dia + 1;
+    diaSpanElement.innerText = dia + 1;
+    diaPoblacion.innerText = dia + 1;
+    diaBarSort.innerText = dia + 1;
     sanos.innerText = datos[dia]["Sanos"];
     contagiados.innerText = datos[dia]["Contagiados"];
     recuperados.innerText = datos[dia]["Recuperados"];
@@ -806,6 +850,7 @@ function createBarSort(datos, dia) {
 }
 //this.createPieChart(datos);
 let firstTimeStackChart = true;
+
 function createStackChart(datos) {
     if (firstTimeStackChart) {
         showStackChart();
@@ -959,13 +1004,14 @@ function createStackChart(datos) {
 }
 
 let firstCreateCircular = true;
+
 function nextDayCircular() {
     let botonNextDayCircular = document.getElementById("nextDayCircular");
     let previousDayButtonCircular = document.getElementById("previousDayCircular");
     if (previousDayButtonCircular != null) {
         previousDayButtonCircular.disabled = false;
     }
-        botonNextDayCircular.innerHTML = "Siguiente día";
+    botonNextDayCircular.innerHTML = "Siguiente día";
 
     if (firstCreateCircular) {
         this.createPieChart(datos, contadorDias);
@@ -995,12 +1041,13 @@ function previousDayCircular() {
             previousDayButtonCircular.disabled = true;
             return;
         }
-    }   
+    }
     contadorDias--;
 }
 
 let firstCreateBarras = true;
-function nextDayBarras(){
+
+function nextDayBarras() {
     let botonNextDayBarras = document.getElementById("nextDayBarras");
     let previousDayButtonBarras = document.getElementById("previousDayBarras");
     botonNextDayBarras.innerHTML = "Siguiente día";
@@ -1039,7 +1086,7 @@ function previousDayBarras() {
             previousDayButtonBarras.disabled = true;
             return;
         }
-    }   
+    }
 }
 
 let buttonVerGrafica = document.getElementById("btnVerGrafica");
@@ -1062,7 +1109,7 @@ buttonVerGrafica.addEventListener("click", (event) => {
     if (radioOptionSelected == "datosVista" && dropDownValue == "barras") {
         d3.select(".pieChartDiv").html("");
         let pieChart = document.getElementById("pieChartDiv");
-        if(pieChart != null){
+        if (pieChart != null) {
             pieChart.remove();
         }
 
@@ -1072,7 +1119,7 @@ buttonVerGrafica.addEventListener("click", (event) => {
         if (circularDiv != null) {
             circularDiv.style.display = "none";
         }
-         if (puntos != null) {
+        if (puntos != null) {
             puntos.style.display = "none";
         }
 
@@ -1092,9 +1139,9 @@ buttonVerGrafica.addEventListener("click", (event) => {
         }
         showControlsButtonsBarras();
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "circular") {
-         d3.select(".containerBarSort").html("");
+        d3.select(".containerBarSort").html("");
         let barSortDiv = document.getElementById("containerBarSort");
-        if(barSortDiv != null){
+        if (barSortDiv != null) {
             barSortDiv.remove();
         }
         const puntos = document.getElementById('puntosDiv');
@@ -1112,12 +1159,30 @@ buttonVerGrafica.addEventListener("click", (event) => {
         let previousDayButtonCircular = document.getElementById("previousDayCircular");
         previousDayButtonCircular.disabled = true;
         buttonNextCircular.innerHTML = "Día siguiente";
+
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "puntos") {
+
         const barras = document.getElementById('barrasDiv');
+        const circular = document.getElementById('circularDiv');
+        d3.select(".containerBarSort").html("");
+        let barSortDiv = document.getElementById("containerBarSort");
+        if (barSortDiv != null) {
+            barSortDiv.remove();
+        }
         if (barras != null) {
             barras.style.display = "none";
         }
+        if (circular != null) {
+            circular.style.display = "none";
+        }
         showControlsButtonsPuntos();
+        showChartPoints();
+        let buttonNextPoints = document.getElementById("nextDay");
+        let previousDayButtonPoints = document.getElementById("previousDay");
+
+        previousDayButtonPoints.disabled = true;
+        buttonNextPoints.innerHTML = "Día siguiente";
+
     } else if (radioOptionSelected == "datosVista" && dropDownValue == "sobrecargada") {
 
     } else {
