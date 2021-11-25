@@ -12,6 +12,7 @@ such as http://localhost:5000/index.html
 ```
 4. Visualize your data in the browser
 ```
+
 ### Simulación de contagios de COVID.
 
 Kevin Contreras - A01635597
@@ -22,3 +23,5 @@ Alfredo Godinez - A01274993
 
 Michel Lujano - A01636172
 
+### Video
+Explicacion del [Simulador de contagios COVID](https://www.youtube.com/watch?v=qkcAfPnVrgE)
