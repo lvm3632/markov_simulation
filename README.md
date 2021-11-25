@@ -1,6 +1,6 @@
 # Proyecto métodos cuantitativos
 
-## Instalación
+## Usage and installation
 ```
 1. py coronavirus.py
 2. Generate a new file json with the name test.json
