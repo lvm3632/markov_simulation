@@ -25,3 +25,5 @@ Michel Lujano - A01636172
 
 ### Video
 Explicacion del [Simulador de contagios COVID](https://www.youtube.com/watch?v=qkcAfPnVrgE)
+
+GitPages (Simulator): https://lvm3632.github.io/markov_simulation/
